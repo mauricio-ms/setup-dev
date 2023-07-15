@@ -17,3 +17,7 @@ xrand -s 1920x1080
 
 * VIM
 gg: go to the top
+
+* XMONAD
+M-d: open menu
+M-number: switch to workspace number
