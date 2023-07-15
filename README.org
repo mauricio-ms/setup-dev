@@ -1,5 +1,6 @@
-Create symbolic link to xmonad.hs
+Create symbolic links to xmonad config
 ln -s ~/development/setup-dev/xmonad.hs ~/.config/xmonad/xmonad.hs
+ln -s ~/development/setup-dev/xmobarrc ~/.xmobarrc
 
 Install dependencies
 sudo pacman -S nitrogem picom xmobar

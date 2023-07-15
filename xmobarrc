@@ -1,9 +1,20 @@
-Config { overrideRedirect = False
-       , font     	 = "xft:terminus"
-       , additionalFonts = ["xft:FontAwesome-9"],
-       , bgColor  	 = "black"
-       , fgColor  	 = "#f8f8f2"
-       , position 	 = TopW L 90
+Config { font     	 = "xft:terminus:pixelsize=16:antialias=true:hinting=true"
+       , additionalFonts  = []
+       , borderColor      = "black"
+       , border           = TopB
+       , bgColor  	  = "black"
+       , fgColor  	  = "grey"
+       , alpha            = 255
+       , position 	  = Top
+       , textOffset       = -1
+       , iconOffset       = -1
+       , lowerOnStart     = True
+       , pickBroadest     = False
+       , persistent       = False
+       , hideOnStart      = False
+       , iconRoot         = "."
+       , allDesktops      = True
+       , overrideRedirect = True
        , commands = [ Run Weather "EGPF"
                         [ "--template", "<weather> <tempC>°C"
                         , "-L", "0"
