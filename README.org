@@ -1,0 +1,17 @@
+Create symbolic link to xmonad.hs
+ln -s ~/development/setup-dev/xmonad.hs ~/.config/xmonad/xomand.hs
+
+Install dependencies
+sudo pacman -S nitrogem picom xmobar
+
+Run nitrogen and configure the default directory to the wallpapers (like /usr/share/backgrounds)
+
+* Resolution
+# List resolutions
+xrand
+
+# Set resolution example
+xrand -s 1920x1080
+
+* VIM
+gg: go to the top
