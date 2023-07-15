@@ -1,10 +1,12 @@
 Create symbolic link to xmonad.hs
-ln -s ~/development/setup-dev/xmonad.hs ~/.config/xmonad/xomand.hs
+ln -s ~/development/setup-dev/xmonad.hs ~/.config/xmonad/xmonad.hs
 
 Install dependencies
 sudo pacman -S nitrogem picom xmobar
 
 Run nitrogen and configure the default directory to the wallpapers (like /usr/share/backgrounds)
+
+Run dmenu_run -b to install dmenu
 
 * Resolution
 # List resolutions
