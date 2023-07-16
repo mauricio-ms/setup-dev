@@ -1,6 +1,12 @@
 Create symbolic links to xmonad config
 ln -s ~/development/setup-dev/xmonad.hs ~/.config/xmonad/xmonad.hs
 ln -s ~/development/setup-dev/xmobarrc ~/.xmobarrc
+mkdir ~/.config/xmonad/icons
+ln -s ~/development/setup-dev/linux-icon.png ~/.config/xmonad/icons/linux-icon.png
+ln -s ~/development/setup-dev/pacupdate ~/.local/bin/pacupdate
+
+Icons Website
+https://www.nerdfonts.com/cheat-sheet
 
 Install dependencies
 sudo pacman -S nitrogem picom xmobar
@@ -21,4 +27,4 @@ gg: go to the top
 
 * XMONAD
 M-d: open menu
-M-number: switch to workspace number
+M-number: switch to workspace numbex

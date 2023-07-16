@@ -1,12 +1,16 @@
--- IMPORTS
-
+-- Base
 import XMonad
 import Data.Monoid
 import System.Exit
+import qualified XMonad.StackSet as W
+
+-- Hooks
 import XMonad.Hooks.ManageDocks
+
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
-import qualified XMonad.StackSet as W
+
+-- Data
 import qualified Data.Map        as M
 
 -- The preferred terminal program, which is used in a binding below and by
