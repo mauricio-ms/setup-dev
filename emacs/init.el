@@ -230,8 +230,6 @@
 
   (setq org-agenda-files
 	'("~/development/org-files/tasks.org"
-	  "~/development/org-files/birthdays.org"
-	  "~/development/org-files/habits.org"
 	  "~/development/org-files/archive.org"))
 
   (require 'org-habit)
@@ -239,8 +237,8 @@
   (setq org-habit-graph-column 60)
   
   (setq org-todo-keywords
-    '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-      (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+	  (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w)" "INTERRUPT(i@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
 
   (setq org-refile-targets
     '(("archive.org" :maxlevel . 1)
@@ -487,10 +485,33 @@
     "h" 'dired-single-up-directory
     "l" 'dired-single-buffer))
 
-(load "~/.config/.emacs-default/graphiql.el/graphiql.el")
-(load "~/.config/.emacs-default/graphiql.el/graphiql-font.el")
-(load "~/.config/.emacs-default/graphiql.el/graphiql-indent.el")
-(load "~/.config/beatstars-el/bs.el")
+;; LSP
+(defun efs/lsp-mode-setup ()
+  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (lsp-headerline-breadcrumb-mode))
+
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :hook (lsp-mode . efs/lsp-mode-setup)
+  :init
+  (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+  :config
+  (add-to-list 'lsp-language-id-configuration '(graphiql-mode . "graphql"))
+  (lsp-enable-which-key-integration t))
+
+;; REST
+(use-package restclient)
+
+(use-package axe)
+
+(use-package deferred)
+(use-package request)
+(use-package request-deferred)
+
+;(load "~/.config/.emacs-default/graphiql.el/graphiql.el")
+;(load "~/.config/.emacs-default/graphiql.el/graphiql-font.el")
+;(load "~/.config/.emacs-default/graphiql.el/graphiql-indent.el")
+;(load "~/.config/beatstars-el/bs.el")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
