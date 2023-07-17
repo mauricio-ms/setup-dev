@@ -1,0 +1,8 @@
+* Installation
+
+Clone https://github.com/PixlOne/logiops and follow the instructions in the README
+sudo ln -s ~/development/setup-dev/logitech/logid.cfg /etc/logid.cfg
+
+* Updating the config
+
+sudo systemctl restart logid
