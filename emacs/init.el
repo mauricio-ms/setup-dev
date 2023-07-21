@@ -491,6 +491,7 @@
     "h" 'dired-single-up-directory
     "l" 'dired-single-buffer))
 
+<<<<<<< Updated upstream
 ;; LSP
 (defun efs/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
@@ -514,10 +515,12 @@
 (use-package request)
 (use-package request-deferred)
 
-;(load "~/.config/.emacs-default/graphiql.el/graphiql.el")
-;(load "~/.config/.emacs-default/graphiql.el/graphiql-font.el")
-;(load "~/.config/.emacs-default/graphiql.el/graphiql-indent.el")
-;(load "~/.config/beatstars-el/bs.el")
+(use-package sqlite3)
+
+(load "~/.config/.emacs-default/graphiql.el/graphiql.el")
+(load "~/.config/.emacs-default/graphiql.el/graphiql-font.el")
+(load "~/.config/.emacs-default/graphiql.el/graphiql-indent.el")
+(load "~/.config/beatstars-el/bs.el")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
