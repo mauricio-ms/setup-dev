@@ -491,7 +491,6 @@
     "h" 'dired-single-up-directory
     "l" 'dired-single-buffer))
 
-<<<<<<< Updated upstream
 ;; LSP
 (defun efs/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
