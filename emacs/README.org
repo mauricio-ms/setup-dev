@@ -1,0 +1,2 @@
+* Projectile
+C-c p s g: Search acrross files of the project

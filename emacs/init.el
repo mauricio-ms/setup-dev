@@ -43,8 +43,9 @@
   (package-install 'use-package))
 
 (require 'use-package)
-
 (setq use-package-always-ensure t)
+
+(require 'cl-lib)
 
 (column-number-mode)
 (global-display-line-numbers-mode t)
@@ -56,7 +57,7 @@
 		eshell-mode-hook
 		treemacs-mode-hook
 		sql-interactive-mode-hook
-		graphiql-mode-hook))
+		graphql-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (use-package command-log-mode)
@@ -360,76 +361,6 @@
 (use-package visual-fill-column
   :hook (org-mode . efs/org-mode-visual-fill))
 
-(defun efs/lsp-mode-setup ()
-  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-  (lsp-headerline-breadcrumb-mode))
-
-(use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  :hook (lsp-mode . efs/lsp-mode-setup)
-  :init
-  (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
-  :config
-  (add-to-list 'lsp-language-id-configuration '(graphiql-mode . "graphql"))
-  (lsp-enable-which-key-integration t))
-
-(use-package typescript-mode
-  :mode "\\.ts\\'"
-  :hook (typescript-mode . lsp-deferred)
-  :config
-  (setq typescript-indent-level 2))
-
-;;(load "~/.config/beatstars-el/bs.el")
-
-(use-package restclient)
-
-;; (use-package graphql-mode
-;;   :mode "\\.gql\\'"
-;;   :hook (graphql-mode . lsp-deferred)
-;;   :config
-;;   (setq graphql-indent-level 2))
-
-;; (setq lsp-clients-graphql-server-args
-;;       '("server" "--method=stream" "--configDir=/home/mauricio/.config/beatstars-el/.graphqlrc"))
-
-;; (load "~/.config/.emacs-default/graphiql.el/graphiql.el")
-;; (load "~/.config/.emacs-default/graphiql.el/graphiql-font.el")
-;; (load "~/.config/.emacs-default/graphiql.el/graphiql-indent.el")
-
-;; (add-to-list 'auto-mode-alist '("\\.gql\\'" . graphiql-mode))
-;; (add-hook 'graphiql-mode-hook 'lsp-deferred)
-
-;; (defun bs-set-env ()
-;;   "Set the BS environment"
-;;   (interactive)
-;;   (progn
-;;     (find-file-noselect "/home/mauricio/.config/beatstars-el/.graphqlconfig")
-;;     (with-current-buffer (get-file-buffer "/home/mauricio/.config/beatstars-el/.graphqlconfig")
-;;       (graphiql-select-endpoint))))
-;; (global-set-key (kbd "C-c b e") 'bs-set-env)
-
-(use-package company
-  :after lsp-mode
-  :hook (lsp-mode . company-mode)
-  :bind (:map company-active-map
-         ("<tab>" . company-complete-selection))
-        (:map lsp-mode-map
-         ("<tab>" . company-indent-or-complete-common))
-  :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
-
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :custom
-  (lsp-ui-doc-position 'bottom))
-
-(use-package lsp-treemacs
-  :after lsp)
-
-(use-package lsp-ivy
-  :after lsp)
-
 (use-package evil-nerd-commenter
   :bind ("M-/" . evilnc-comment-or-uncomment-lines))
 
@@ -496,14 +427,42 @@
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-mode))
 
+(use-package graphql-mode
+  :mode "\\.gql\\'"
+  :hook (graphql-mode . lsp-deferred)
+  :config
+  (setq graphql-indent-level 2))
+
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :hook (lsp-mode . efs/lsp-mode-setup)
   :init
   (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
   :config
-  (add-to-list 'lsp-language-id-configuration '(graphiql-mode . "graphql"))
+  (add-to-list 'lsp-language-id-configuration '(graphql-mode . "gql"))
   (lsp-enable-which-key-integration t))
+
+(use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind (:map company-active-map
+         ("<tab>" . company-complete-selection))
+        (:map lsp-mode-map
+         ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :custom
+  (lsp-ui-doc-position 'bottom))
+
+(use-package lsp-treemacs
+  :after lsp)
+
+(use-package lsp-ivy
+  :after lsp)
 
 ;; REST
 (use-package restclient)
@@ -515,11 +474,6 @@
 (use-package request-deferred)
 
 (use-package sqlite3)
-
-(load "~/.config/.emacs-default/graphiql.el/graphiql.el")
-(load "~/.config/.emacs-default/graphiql.el/graphiql-font.el")
-(load "~/.config/.emacs-default/graphiql.el/graphiql-indent.el")
-(load "~/.config/beatstars-el/bs.el")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
