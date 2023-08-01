@@ -15,6 +15,26 @@ Run nitrogen and configure the default directory to the wallpapers (like /usr/sh
 
 Run dmenu_run -b to install dmenu
 
+* Setup
+** asdf
+
+#+begin_src shell
+# Setup the plugins repository
+asdf plugin list all
+# Install plugins
+asdf plugin add java
+# Check java versions
+asdf list all java
+# Install java version
+asdf install java openjdk-20
+# Set the global version for java
+asdf global java openjdk-20
+#+end_src
+** fd
+
+It’s a great idea to install fd which is much faster than find.
+https://github.com/sharkdp/fd
+
 * Resolution
 # List resolutions
 xrand

@@ -47,6 +47,10 @@
 
 (require 'cl-lib)
 
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
+
 (column-number-mode)
 (global-display-line-numbers-mode t)
 
@@ -173,14 +177,31 @@
 
 (use-package projectile
   :diminish projectile-mode
-  :config (projectile-mode)
-  :custom ((projectile-completion-system 'ivy))
+  :config
+  (projectile-update-project-type
+   'gradle
+   :test-suffix "Test"
+   :src-dir "src/main/"
+   :test-dir "src/test/")
+  (projectile-update-project-type
+   'gradlew
+   :test-suffix "Test"
+   :src-dir "src/main/"
+   :test-dir "src/test/")
+  (projectile-mode)
+  :custom
+  (projectile-completion-system 'ivy)
+  (projectile-create-missing-test-files t)
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :init
   (when (file-directory-p "~/development")
     (setq projectile-project-search-path '("~/development")))
   (setq projectile-switch-project-action #'projectile-dired))
+
+(add-hook 'projectile-after-switch-project-hook
+		  (lambda ()
+			(message "SWITCH PROJECT")))
 
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
@@ -437,7 +458,7 @@
   :commands (lsp lsp-deferred)
   :hook (lsp-mode . efs/lsp-mode-setup)
   :init
-  (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+  (setq lsp-keymap-prefix "C-c l")
   :config
   (add-to-list 'lsp-language-id-configuration '(graphql-mode . "gql"))
   (lsp-enable-which-key-integration t))
@@ -455,14 +476,112 @@
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
+  :config
+  (general-define-key
+   :keymaps 'lsp-mode-map
+   :prefix lsp-keymap-prefix
+   "c s" #'lsp-ui-doc-show)
+  (general-define-key
+   :keymaps 'lsp-mode-map
+   :prefix lsp-keymap-prefix
+   "c h" #'lsp-ui-doc-hide)
   :custom
-  (lsp-ui-doc-position 'bottom))
+  (lsp-ui-doc-position 'bottom)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-doc-show-with-cursor nil)
+  (lsp-ui-doc-show-with-mouse nil)
+  (lsp-ui-imenu-auto-refresh t))
+
+;; lsp-response-timeout
+;; lsp-enable-file-watchers
+;; lsp-file-watch-ignored-directories
+;; lsp-file-watch-ignored-files
+;; lsp-file-watch-threshold
 
 (use-package lsp-treemacs
   :after lsp)
 
 (use-package lsp-ivy
   :after lsp)
+
+;; Java
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
+(use-package yasnippet
+  :config
+  (yas-global-mode)
+  (define-key yas-minor-mode-map (kbd "C-<tab>") #'yas-expand))
+(use-package yasnippet-snippets
+  :ensure t)
+
+(setq dependencies-dir (expand-file-name "~/development/dependencies"))
+(unless (file-exists-p dependencies-dir)
+  (make-directory dependencies-dir))
+(setq lombok-jar-path (concat dependencies-dir "/lombok.jar"))
+(use-package lsp-java
+  :config
+  (add-hook 'java-mode-hook 'lsp)
+  (unless (file-exists-p lombok-jar-path)
+	(url-copy-file "https://projectlombok.org/downloads/lombok.jar" lombok-jar-path))
+  :custom
+  (lsp-java-vmargs
+   `("-XX:+UseParallelGC"
+	 "-XX:GCTimeRatio=4"
+	 "-XX:AdaptiveSizePolicyWeight=90"
+	 "-Dsun.zip.disableMemoryMapping=true"
+	 "-Xmx8G"
+	 "-Xms100m"
+	 ,(concat "-javaagent:" lombok-jar-path)
+	 )))
+
+(require 'lsp-java-boot)
+;; to enable the lenses
+(add-hook 'lsp-mode-hook #'lsp-lens-mode)
+(add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+
+(use-package dap-mode
+  :after lsp-mode
+  :custom
+  (dap-auto-configure-features '(sessions locals expressions tooltip))
+  :config
+  (dap-auto-configure-mode)
+  (general-define-key
+   :keymaps 'lsp-mode-map
+   :prefix lsp-keymap-prefix
+   "d" '(dap-hydra t :wk "debugger"))
+  (define-key dap-mode-map (kbd "<f7>") #'dap-step-in)
+  (define-key dap-mode-map (kbd "<f8>") #'dap-next)
+  (define-key dap-mode-map (kbd "<f9>") #'dap-continue))
+
+(use-package dap-java
+  :ensure nil
+  :after (lsp-java))
+
+(use-package helm-lsp
+  :ensure t
+  :after (lsp-mode)
+  :commands (helm-lsp-workspace-symbol)
+  :init (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
+
+;; Avoid garbage collection at statup
+(setq gc-cons-threshold most-positive-fixnum ; 2^61 bytes
+      gc-cons-percentage 0.6)
+
+(add-hook 'emacs-startup-hook
+  (lambda ()
+    (setq gc-cons-threshold 300000000 ; 300mb	
+          gc-cons-percentage 0.1)))
+
+;; Fix compile escape codes to print stuff like test outputs nicely
+(defun ansi-colorize-buffer ()
+  (let ((buffer-read-only nil))
+	(ansi-color-apply-on-region (point-min) (point-max))))
+(use-package ansi-color
+  :ensure t
+  :config
+  (add-hook 'compilation-filter-hook 'ansi-colorize-buffer))
 
 ;; REST
 (use-package restclient)
@@ -475,14 +594,25 @@
 
 (use-package sqlite3)
 
+;; Coding settings
+
+;; Automatically add ending brackets and braces
+(electric-pair-mode 1)
+
+;; Make sure tab-width is 4 and not 8
+(setq-default tab-width 4)
+
+;; Highlight matching brackets and braces
+(show-paren-mode 1)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(helm-minibuffer-history-key "M-p")
  '(package-selected-packages
-   (quote
-    (origami request restclient restclient-mode graphiql-mode graphql-mode lsp-graphql vterm eterm-256color graphql-lsp yasnippet dap-mode evil-nerd-commenter lsp-ivy lsp-treemacs javascript-mode which-key visual-fill-column use-package typescript-mode rainbow-delimiters org-bullets lsp-ui ivy-rich hydra helpful general forge evil-collection doom-themes doom-modeline counsel-projectile company command-log-mode all-the-icons))))
+   '(lsp-java-boot counsel-projectile projectile yasnippet-snippets helm-swoop helm-lsp flycheck origami request restclient restclient-mode graphiql-mode graphql-mode lsp-graphql vterm eterm-256color graphql-lsp yasnippet dap-mode evil-nerd-commenter lsp-ivy lsp-treemacs javascript-mode which-key visual-fill-column use-package typescript-mode rainbow-delimiters org-bullets lsp-ui ivy-rich hydra helpful general forge evil-collection doom-themes doom-modeline company command-log-mode all-the-icons)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

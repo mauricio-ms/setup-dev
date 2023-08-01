@@ -1,2 +1,116 @@
+* Setup
+
+mkdir ~/.config/.emacs-default/snippets/java-mode
+ln -s ~/development/setup-dev/emacs/snippets/java/assert-equals ~/.config/.emacs-default/snippets/java-mode/assert-equals
+ln -s ~/development/setup-dev/emacs/snippets/java/test ~/.config/.emacs-default/snippets/java-mode/test
+
 * Projectile
-C-c p s g: Search acrross files of the project
+
+** Prefixes
+
+When available are optional:
+    - 4: Open the result into a new window
+    - 5: Open the result into a new frame
+
+** Project Management
+
+- C-c p c: Compile
+- C-c p m: Open projectile commander
+- C-c p p: Switch project
+- C-c p <prefix> d: List directories
+- C-c p <prefix> D: Open the root of the project in dired
+- C-c p <prefix> b: Display a list of all project buffers currently open
+- C-c p i: Invalidate the project cache
+- C-c p k: Kill all project buffers
+- C-c p left: Switch to the previous project buffer
+- C-c p right: Switch to the next project buffer
+- C-c p S: Save all project buffers
+- C-c p x t: Open a terminal for the project
+- C-c p ESC: Switch to the most recently selected Projectile buffer 
+
+** File Search
+
+  - C-c p <prefix> f: FInd file in current project
+  - C-c p <prefix> F: Find a file in all known projects
+
+** Text Search
+
+- C-c p s g: Search acrross files of the project
+
+** Tests
+
+- C-c p P: Run tests
+- C-c p t: Toggle between implementation and test
+  
+
+* Flycheck
+
+- C-c ! l: List errors
+- C-c ! n: Go to next error
+- C-c ! p: Go to previous error
+
+* Java 
+
+- C-c l a a: Execute code action
+- C-c l r r: Rename
+- C-c l h h: Describe thing at point
+- C-c l = =: Format buffer
+- lsp-java-organize-imports
+- lsp-java-type-hierarchy 
+- M-?: Find references
+  - C-n:  Navigate to the next reference
+  - C-p: Navigate to the previous reference
+- M-.: Jump to the reference selected
+- M-,: Back to the previous location
+- C-c l g a: Search symbols
+  - ==@/== shows all defined request mappings (mapped path, request method, source location)
+  - ==@+== shows all defined beans (bean name, bean type, source location)
+  - ==@>== shows all functions (prototype implementation)
+  - ==@== shows all Spring annotations in the code
+
+** yasnippet
+
+file: Create class structure
+ae: assertEquals(,)
+test: Create test method
+
+** gradle
+
+To enhance test output import this plugin:
+
+	id 'com.adarshr.test-logger' version '3.2.0'
+
+* Company
+
+Manual: https://company-mode.github.io/manual/
+
+- M-(digit): Complete with one of the first 10 candidates
+- <f1>: Display documentation of the selected candidate
+
+* lsp-ui
+
+- C-c l c s: Show doc for thing at point
+- C-c l c h: Hide any opened documentation
+
+* treemacs 
+
+- lsp-treemacs-symbols: Display symbols list for current class
+- C-c l g e: Display error list
+- C-c l g h: Display call hierarchy for current point 
+
+* Debugging with dap-mode 
+
+- dap-debug-last: Debug again the last session
+- dap-disconnect: Disconnect from debugger
+- dap-debug-recent: Choose what to debug from a list of the recent debug sessions executed
+- dap-ui-expressions-add: Add expression to watch
+- dap-ui-repl: Open repl
+- dap-ui-breakpoints: Open breakpoints panel
+- C-c l d: Open hydra debugger navigation panel
+- f7: Step in
+- f8: Next
+- f9: Continue
+
+* Updating Lombok 
+rm ~/development/dependencies/lombok.jar
+# restart emacs
