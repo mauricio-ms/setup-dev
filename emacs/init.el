@@ -192,6 +192,7 @@
   :custom
   (projectile-completion-system 'ivy)
   (projectile-create-missing-test-files t)
+  (projectile-sort-order 'recentf)
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :init
@@ -205,6 +206,10 @@
 
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
+
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :ensure t)
 
 (use-package magit
   :custom
@@ -461,7 +466,13 @@
   (setq lsp-keymap-prefix "C-c l")
   :config
   (add-to-list 'lsp-language-id-configuration '(graphql-mode . "gql"))
-  (lsp-enable-which-key-integration t))
+  (lsp-enable-which-key-integration t)
+  (dolist (ignored-dirs '("[/\\\\]build\\'"
+						  "[/\\\\]bin\\'"
+						  "[/\\\\]logs\\'"
+						  "[/\\\\]gradle\\'"
+						  ))
+	(push ignored-dirs lsp-file-watch-ignored-directories)))
 
 (use-package company
   :after lsp-mode
@@ -491,12 +502,6 @@
   (lsp-ui-doc-show-with-cursor nil)
   (lsp-ui-doc-show-with-mouse nil)
   (lsp-ui-imenu-auto-refresh t))
-
-;; lsp-response-timeout
-;; lsp-enable-file-watchers
-;; lsp-file-watch-ignored-directories
-;; lsp-file-watch-ignored-files
-;; lsp-file-watch-threshold
 
 (use-package lsp-treemacs
   :after lsp)
@@ -557,13 +562,24 @@
 
 (use-package dap-java
   :ensure nil
-  :after (lsp-java))
+  :after (lsp-java)
+  :config
+  (general-define-key
+   :keymaps 'lsp-mode-map
+   :prefix lsp-keymap-prefix
+   "t c" #'dap-java-debug-test-class)
+  (general-define-key
+   :keymaps 'lsp-mode-map
+   :prefix lsp-keymap-prefix
+   "t m" #'dap-java-debug-test-method))
 
 (use-package helm-lsp
   :ensure t
   :after (lsp-mode)
   :commands (helm-lsp-workspace-symbol)
   :init (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
+
+;; perfomance tuning
 
 ;; Avoid garbage collection at statup
 (setq gc-cons-threshold most-positive-fixnum ; 2^61 bytes
@@ -573,6 +589,11 @@
   (lambda ()
     (setq gc-cons-threshold 300000000 ; 300mb	
           gc-cons-percentage 0.1)))
+
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+
+;; I didn't find another way to work with large Java projects
+(setq lsp-response-timeout 30)
 
 ;; Fix compile escape codes to print stuff like test outputs nicely
 (defun ansi-colorize-buffer ()
@@ -592,7 +613,10 @@
 (use-package request)
 (use-package request-deferred)
 
-(use-package sqlite3)
+(add-hook 'find-file-hook 'req-buffers-hook)
+(defun req-buffers-hook ()
+  (when (string= (file-name-extension buffer-file-name) "req") 
+    (restclient-mode)))
 
 ;; Coding settings
 
