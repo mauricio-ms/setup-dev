@@ -387,6 +387,27 @@
 (use-package visual-fill-column
   :hook (org-mode . efs/org-mode-visual-fill))
 
+;; org babel
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((C . t)))
+(setq org-confirm-babel-evaluate nil)
+
+;; set templates for org babel
+(require 'org-tempo)
+(add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("cpp" . "src cpp"))
+
+;; Automatically tangle README.org file from C++ book when it is saved
+(defun efs/org-babel-tangle-config ()
+  (when (string-equal (buffer-file-name)
+					  (expand-file-name "~/development/books/programming-principles-and-practice-using-c++/README.org"))
+	;; Dynamic scoping to the rescue
+	(let ((org-confirm-babel-evaluate nil))
+	  (org-babel-tangle))))
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+
 (use-package evil-nerd-commenter
   :bind ("M-/" . evilnc-comment-or-uncomment-lines))
 
@@ -603,6 +624,10 @@
   :ensure t
   :config
   (add-hook 'compilation-filter-hook 'ansi-colorize-buffer))
+
+;; C++
+(add-hook 'c-mode-hook 'lsp)
+(add-hook 'c++-mode-hook 'lsp)
 
 ;; REST
 (use-package restclient)

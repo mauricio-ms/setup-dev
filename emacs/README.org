@@ -119,3 +119,9 @@ Manual: https://company-mode.github.io/manual/
 * Updating Lombok 
 rm ~/development/dependencies/lombok.jar
 # restart emacs
+
+* Org Babel
+
+- ==C-c c==: Run code block
+- ==C-c C-v t==: Tangle code block
+
