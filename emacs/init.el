@@ -393,6 +393,28 @@
  '((C . t)))
 (setq org-confirm-babel-evaluate nil)
 
+;; org mode presentation
+(defun setup-dev/presentation-setup ()
+  (org-display-inline-images)
+  
+  (setq-local face-remapping-alist '((default (:height 2.0) variable-pitch)
+                                     (org-verbatim (:height 1.75) org-verbatim)
+                                     (org-block (:height 1.25) org-block))))
+
+(defun setup-dev/presentation-end ()
+  (setq-local face-remapping-alist '((default variable-pitch default))))
+
+(use-package org-tree-slide
+  :hook ((org-tree-slide-play . setup-dev/presentation-setup)
+		 (org-tree-slide-stop . setup-dev/presentation-end))
+  :custom
+  (org-tree-slide-slide-in-effect t)
+  (org-tree-slide-activate-message "Presentation started!")
+  (org-tree-slide-deactivate-message "Presentation finished!")
+  (org-tree-slide-header t)
+  (org-tree-slide-breadcrumbs " > ")
+  (org-image-actual-width nil))
+
 ;; set templates for org babel
 (require 'org-tempo)
 (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
@@ -660,8 +682,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(helm-minibuffer-history-key "M-p")
+ '(ispell-dictionary nil)
  '(package-selected-packages
-   '(lsp-java-boot counsel-projectile projectile yasnippet-snippets helm-swoop helm-lsp flycheck origami request restclient restclient-mode graphiql-mode graphql-mode lsp-graphql vterm eterm-256color graphql-lsp yasnippet dap-mode evil-nerd-commenter lsp-ivy lsp-treemacs javascript-mode which-key visual-fill-column use-package typescript-mode rainbow-delimiters org-bullets lsp-ui ivy-rich hydra helpful general forge evil-collection doom-themes doom-modeline company command-log-mode all-the-icons)))
+   '(org-tree-slide cl vertico consult lsp-java-boot counsel-projectile projectile yasnippet-snippets helm-swoop helm-lsp flycheck origami request restclient restclient-mode graphiql-mode graphql-mode lsp-graphql vterm eterm-256color graphql-lsp yasnippet dap-mode evil-nerd-commenter lsp-ivy lsp-treemacs javascript-mode which-key visual-fill-column use-package typescript-mode rainbow-delimiters org-bullets lsp-ui ivy-rich hydra helpful general forge evil-collection doom-themes doom-modeline company command-log-mode all-the-icons)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
