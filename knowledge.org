@@ -1,0 +1,15 @@
+* Linux Pipe =|= 
+
+A pipe is a form of redirection (transfer of standard output to some other destination) that is used in Linux and other Unix-like operating systems to send the output of one command/program/process to another command/program/process for further processing. The Unix/Linux systems allow the stdout of a command to be connected to the stdin of another command. You can make it do so by using the pipe character =|=.
+
+** Piping to the clipboard 
+
+#+begin_src shell
+
+# install xclip
+
+echo "Hello, Clipboard" | xclip -selection c
+
+# Now, C-v will output "Hello, Clipboard"
+
+#+end_src
