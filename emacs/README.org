@@ -2,7 +2,6 @@
 #+author: Maurício Mussatto Scopel
 
 * Setup
-
 mkdir ~/.config/.emacs-default/snippets/java-mode
 ln -s ~/development/setup-dev/emacs/snippets/java/assert-equals ~/.config/.emacs-default/snippets/java-mode/assert-equals
 ln -s ~/development/setup-dev/emacs/snippets/java/test ~/.config/.emacs-default/snippets/java-mode/test
@@ -129,14 +128,19 @@ rm ~/development/dependencies/lombok.jar
 
 ** Org Babel
 
+
+
 - =C-c c=: Run code block
 - =C-c C-v t=: Tangle code block
   
-** Org Tree Slide 
+** Presentation
 
-This package allow to create presentations from org mode files.
 
-*** Package configuration
+These packages allow you to create presentations from org mode files
+
+*** Org Tree Slide 
+
+**** Package configuration
 
 #+begin_src emacs-lisp
 
@@ -164,12 +168,12 @@ This package allow to create presentations from org mode files.
 
 #+end_src
 
-*** Starting presentation
+**** Starting presentation
 
 To start the presentation run =org-tree-slide-mode=.
 To start with timer, run =org-tree-slide-play-with-timer=.
 
-*** Profiles
+**** Profiles
 
 These commands allos you to enable profiles for different purposes
 
@@ -177,8 +181,23 @@ These commands allos you to enable profiles for different purposes
 - =org-tree-slide-presentation-profile=: For Presentation use
 - =org-tree-slide-narrowing-control-profile=: Only shows TODO slide pages
 
-*** Interacting with slides
+**** Interacting with slides
 
 - =C->=: Display the next slide
 - =C-<=: Display the previous slide
 
+*** Org Present 
+
+
+** Key Bindings
+
+
+| Key       | Command                  | Description                            |
+|-----------+--------------------------+----------------------------------------|
+| ~<left>~  | =org-present-prev=       | Move to the previous slide             |
+| ~<right>~ | =org-present-next=       | Move to the next slide                 |
+| ~C-c <~   | =org-present-beginning=  | Move to the first slide                |
+| ~C-c >~   | =org-present-end=        | Move to the last slide                 |
+| ~C-c C-q~ | =org-present-quit=       | Exit the presentation and reset buffer |
+| ~C-c C-r~ | =org-present-read-only=  | Make the slides read-only              |
+| ~C-c C-w~ | =org-present-read-write= | Make the slides writable               |

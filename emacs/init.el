@@ -1,6 +1,3 @@
-(defvar efs/default-font-size 120)
-(defvar efs/default-variable-font-size 120)
-
 (setq inhibit-startup-message t)
 
 (scroll-bar-mode -1)    ; Disable visible scrollbar
@@ -12,13 +9,14 @@
 ;; Set up the visible bell
 (setq visible-bell t)
 
-(set-face-attribute 'default nil :font "Fira Code Retina" :height efs/default-font-size)
+;; Let the desktop background show through
+(set-frame-parameter (selected-frame) 'alpha '(97 . 100))
+(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 
-;; Set the fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height efs/default-font-size)
-
-;; Set the variable pitch face
-(set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
+;; Fonts
+(set-face-attribute 'default nil :font "JetBrains Mono" :weight 'light :height 130)
+(set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'light :height 140)
+(set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :weight 'light :height 1.0)
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -98,7 +96,7 @@
 
 (use-package doom-themes
   :config
-  (load-theme 'doom-acario-dark t))
+  (load-theme 'doom-palenight t))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -217,7 +215,15 @@
 
 (use-package forge) ;; TODO The GitHub authentication needs to be configure, check at magit documentation page
 
-(defun efs/org-font-setup ()
+;; org mode
+
+;; Load org-faces to make sure we can set appropriate faces
+(require 'org-faces)
+
+(defun setup-dev/org-font-setup ()
+  ;; Hide emphasis markers on formatted text
+  (setq org-hide-emphasis-markers t)
+
   ;; Replace list hyphen with dot
   (font-lock-add-keywords 'org-mode
                           '(("^ *\\([-]\\) "
@@ -232,28 +238,28 @@
                   (org-level-6 . 1.1)
                   (org-level-7 . 1.1)
                   (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+    (set-face-attribute (car face) nil :font "Iosevka Aile" :weight 'medium :height (cdr face)))
+
+  ;; Make the document title a bit bigger
+  (set-face-attribute 'org-document-title nil :font "Iosevka Aile" :weight 'bold :height 1.3)
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
   (set-face-attribute 'org-table nil    :inherit 'fixed-pitch)
   (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
   (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
-  (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
-  (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
+  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch))
 
-(defun efs/org-mode-setup ()
+(defun setup-dev/org-mode-setup ()
   (org-indent-mode)
   (variable-pitch-mode 1)
   (visual-line-mode 1))
 
 (use-package org
-  :hook (org-mode . efs/org-mode-setup)
+  :hook (org-mode . setup-dev/org-mode-setup)
   :config
   (setq org-ellipsis " ▾")
 
@@ -371,7 +377,7 @@
   (define-key global-map (kbd "C-c j")
     (lambda () (interactive) (org-capture nil "jj")))
   
-  (efs/org-font-setup))
+  (setup-dev/org-font-setup))
 
 (use-package org-bullets
   :after org
@@ -379,13 +385,13 @@
   :custom
   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
-(defun efs/org-mode-visual-fill ()
-  (setq visual-fill-column-width 100
-	visual-fill-column-center-text t)
+(defun setup-dev/org-mode-visual-fill ()
+  (setq visual-fill-column-width 110
+		visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
 (use-package visual-fill-column
-  :hook (org-mode . efs/org-mode-visual-fill))
+  :hook (org-mode . setup-dev/org-mode-visual-fill))
 
 ;; org babel
 (org-babel-do-load-languages
@@ -394,26 +400,41 @@
 (setq org-confirm-babel-evaluate nil)
 
 ;; org mode presentation
-(defun setup-dev/presentation-setup ()
-  (org-display-inline-images)
-  
-  (setq-local face-remapping-alist '((default (:height 2.0) variable-pitch)
-                                     (org-verbatim (:height 1.75) org-verbatim)
-                                     (org-block (:height 1.25) org-block))))
+(defun setup-dev/org-present-start ()
+  ;; Tweak font sizes 
+  (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
+									 (header-line (:height 4.0) variable-pitch)
+									 (org-document-title (:height 1.75) org-document-title)
+									 (org-code (:height 1.55) org-code)
+									 (org-verbatim (:height 1.55) org-verbatim)
+									 (org-block (:height 1.25) org-block)
+									 (org-block-begin-line (:height 0.7) org-block)))
 
-(defun setup-dev/presentation-end ()
-  (setq-local face-remapping-alist '((default variable-pitch default))))
+  ;; Set a blank header line string to create blank space at the top
+  (setq header-line-format " "))
 
-(use-package org-tree-slide
-  :hook ((org-tree-slide-play . setup-dev/presentation-setup)
-		 (org-tree-slide-stop . setup-dev/presentation-end))
-  :custom
-  (org-tree-slide-slide-in-effect t)
-  (org-tree-slide-activate-message "Presentation started!")
-  (org-tree-slide-deactivate-message "Presentation finished!")
-  (org-tree-slide-header t)
-  (org-tree-slide-breadcrumbs " > ")
-  (org-image-actual-width nil))
+(defun setup-dev/org-present-prepare-slide (buffer-name heading)
+  ;; Show only top-level headlines
+  (org-overview)
+
+  ;; Unfold the current entry
+  (org-show-entry)
+
+  ;; Show only direct subheadings of the slide but don't expand them
+  (org-show-children))
+
+(defun setup-dev/org-present-end ()
+  ;; Reset font customizations
+  (setq-local face-remapping-alist '((default variable-pitch default)))
+
+  (setq header-line-format nil))
+
+(use-package org-present)
+
+;; Register hooks
+(add-hook 'org-present-mode-hook 'setup-dev/org-present-start)
+(add-hook 'org-present-mode-quit-hook 'setup-dev/org-present-end)
+(add-hook 'org-present-after-navigate-functions 'setup-dev/org-present-prepare-slide)
 
 ;; set templates for org babel
 (require 'org-tempo)
@@ -684,7 +705,7 @@
  '(helm-minibuffer-history-key "M-p")
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(org-tree-slide cl vertico consult lsp-java-boot counsel-projectile projectile yasnippet-snippets helm-swoop helm-lsp flycheck origami request restclient restclient-mode graphiql-mode graphql-mode lsp-graphql vterm eterm-256color graphql-lsp yasnippet dap-mode evil-nerd-commenter lsp-ivy lsp-treemacs javascript-mode which-key visual-fill-column use-package typescript-mode rainbow-delimiters org-bullets lsp-ui ivy-rich hydra helpful general forge evil-collection doom-themes doom-modeline company command-log-mode all-the-icons)))
+   '(pcache org-present org-tree-slide cl vertico consult lsp-java-boot counsel-projectile projectile yasnippet-snippets helm-swoop helm-lsp flycheck origami request restclient restclient-mode graphiql-mode graphql-mode lsp-graphql vterm eterm-256color graphql-lsp yasnippet dap-mode evil-nerd-commenter lsp-ivy lsp-treemacs javascript-mode which-key visual-fill-column use-package typescript-mode rainbow-delimiters org-bullets lsp-ui ivy-rich hydra helpful general forge evil-collection doom-themes doom-modeline company command-log-mode all-the-icons)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
