@@ -502,15 +502,37 @@
 
   (eshell-git-prompt-use-theme 'powerline))
 
+;; dired
+(use-package dired-single)
+
 (use-package dired
   :ensure nil
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
-  ;;:custom ((dired-listing-switches "-agho --group-directories-first"))
+  :custom ((dired-listing-switches "-agho --group-directories-first"))
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
     "h" 'dired-single-up-directory
     "l" 'dired-single-buffer))
+
+(use-package all-the-icons-dired
+  :hook (dired-mode . all-the-icons-dired-mode))
+
+;; Configure how some kind of files shoudl be opened
+(use-package dired-open
+  :after dired
+  :config
+  (setq dired-open-extensions
+		'(("png" . "feh")
+		  ("jpg" . "feh")
+		  ("jpeg" . "feh")
+		  ("mp4" . "mpv"))))
+
+(use-package dired-hide-dotfiles
+  :hook (dired-mode . dired-hide-dotfiles-mode)
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+	"H" 'dired-hide-dotfiles-mode))
 
 ;; LSP
 (defun efs/lsp-mode-setup ()
@@ -705,7 +727,7 @@
  '(helm-minibuffer-history-key "M-p")
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(pcache org-present org-tree-slide cl vertico consult lsp-java-boot counsel-projectile projectile yasnippet-snippets helm-swoop helm-lsp flycheck origami request restclient restclient-mode graphiql-mode graphql-mode lsp-graphql vterm eterm-256color graphql-lsp yasnippet dap-mode evil-nerd-commenter lsp-ivy lsp-treemacs javascript-mode which-key visual-fill-column use-package typescript-mode rainbow-delimiters org-bullets lsp-ui ivy-rich hydra helpful general forge evil-collection doom-themes doom-modeline company command-log-mode all-the-icons)))
+   '(dired-hide-dotfiles dired-hide-dofiles dired-open all-the-icons-dired pcache org-present org-tree-slide cl vertico consult lsp-java-boot counsel-projectile projectile yasnippet-snippets helm-swoop helm-lsp flycheck origami request restclient restclient-mode graphiql-mode graphql-mode lsp-graphql vterm eterm-256color graphql-lsp yasnippet dap-mode evil-nerd-commenter lsp-ivy lsp-treemacs javascript-mode which-key visual-fill-column use-package typescript-mode rainbow-delimiters org-bullets lsp-ui ivy-rich hydra helpful general forge evil-collection doom-themes doom-modeline company command-log-mode all-the-icons)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
