@@ -6,8 +6,12 @@ mkdir ~/.config/.emacs-default/snippets/java-mode
 ln -s ~/development/setup-dev/emacs/snippets/java/assert-equals ~/.config/.emacs-default/snippets/java-mode/assert-equals
 ln -s ~/development/setup-dev/emacs/snippets/java/test ~/.config/.emacs-default/snippets/java-mode/test
 
-* Projectile
+* Minibuffer History
 
+- =M-p= - Go to previous history record saved
+- =M-n= - Go to next history record saved
+   
+* Projectile
 ** Prefixes
 
 When available are optional:

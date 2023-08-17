@@ -6,6 +6,19 @@
 (set-fringe-mode 10)    ; Give some breathing room
 (menu-bar-mode -1)      ; Disable the menu bar
 
+(recentf-mode 1)
+
+;; Save what you enter into minibuffer prompts
+(setq history-length 25)
+(savehist-mode 1)
+
+;; Remember and restore the last cursor location of opened files
+(save-place-mode 1)
+
+;; Move customization variables to a separate file and load it
+(setq custom-file (locate-user-emacs-file "custom-vars.el"))
+(load custom-file 'noerror 'nomessage)
+
 ;; Set up the visible bell
 (setq visible-bell t)
 
@@ -29,9 +42,10 @@
 
 ;; Initialize package sources
 (require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives '("MELPA Stable" . "https://stable.melpa.org/packages/") t)
+
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
@@ -90,7 +104,6 @@
 (use-package all-the-icons)
 
 (use-package doom-modeline
-  :ensure t
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
@@ -102,13 +115,13 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package which-key
-  :init (which-key-mode)
   :diminish which-key-mode
   :config
-  (setq which-key-idle-delay 0.3))
+  (setq which-key-idle-delay 0.3)
+  (which-key-mode))
 
 (use-package ivy-rich
-  :init
+  :config
   (ivy-rich-mode 1))
 
 (use-package counsel
@@ -206,8 +219,7 @@
   :config (counsel-projectile-mode))
 
 (use-package treemacs-projectile
-  :after (treemacs projectile)
-  :ensure t)
+  :after (treemacs projectile))
 
 (use-package magit
   :custom
@@ -495,7 +507,6 @@
 (use-package eshell
   :hook (eshell-first-time-mode . efs/configure-eshell)
   :config
-
   (with-eval-after-load 'esh-opt
     (setq eshell-destroy-buffer-when-process-dies t)
     (setq eshell-visual-commands '("htop" "zsh" "vim")))
@@ -529,7 +540,6 @@
 		  ("mp4" . "mpv"))))
 
 (use-package dired-hide-dotfiles
-  :hook (dired-mode . dired-hide-dotfiles-mode)
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
 	"H" 'dired-hide-dotfiles-mode))
@@ -597,15 +607,13 @@
 
 ;; Java
 (use-package flycheck
-  :ensure t
   :init (global-flycheck-mode))
 
 (use-package yasnippet
   :config
   (yas-global-mode)
   (define-key yas-minor-mode-map (kbd "C-<tab>") #'yas-expand))
-(use-package yasnippet-snippets
-  :ensure t)
+(use-package yasnippet-snippets)
 
 (setq dependencies-dir (expand-file-name "~/development/dependencies"))
 (unless (file-exists-p dependencies-dir)
@@ -660,7 +668,6 @@
    "t m" #'dap-java-debug-test-method))
 
 (use-package helm-lsp
-  :ensure t
   :after (lsp-mode)
   :commands (helm-lsp-workspace-symbol)
   :init (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
@@ -686,7 +693,6 @@
   (let ((buffer-read-only nil))
 	(ansi-color-apply-on-region (point-min) (point-max))))
 (use-package ansi-color
-  :ensure t
   :config
   (add-hook 'compilation-filter-hook 'ansi-colorize-buffer))
 
@@ -718,19 +724,3 @@
 
 ;; Highlight matching brackets and braces
 (show-paren-mode 1)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(helm-minibuffer-history-key "M-p")
- '(ispell-dictionary nil)
- '(package-selected-packages
-   '(dired-hide-dotfiles dired-hide-dofiles dired-open all-the-icons-dired pcache org-present org-tree-slide cl vertico consult lsp-java-boot counsel-projectile projectile yasnippet-snippets helm-swoop helm-lsp flycheck origami request restclient restclient-mode graphiql-mode graphql-mode lsp-graphql vterm eterm-256color graphql-lsp yasnippet dap-mode evil-nerd-commenter lsp-ivy lsp-treemacs javascript-mode which-key visual-fill-column use-package typescript-mode rainbow-delimiters org-bullets lsp-ui ivy-rich hydra helpful general forge evil-collection doom-themes doom-modeline company command-log-mode all-the-icons)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
