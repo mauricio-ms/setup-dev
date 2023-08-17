@@ -19,12 +19,21 @@
 (setq custom-file (locate-user-emacs-file "custom-vars.el"))
 (load custom-file 'noerror 'nomessage)
 
+;; Don't pop up UI dialogs when prompting
+(setq use-dialog-box nil)
+
+;; Revert buffers when the underlying file has changed
+(global-auto-revert-mode 1)
+
+;; Revert Dired and other buffers
+(setq global-auto-revert-non-file-buffers t)
+
 ;; Set up the visible bell
 (setq visible-bell t)
 
 ;; Let the desktop background show through
-(set-frame-parameter (selected-frame) 'alpha '(97 . 100))
-(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+;; (set-frame-parameter (selected-frame) 'alpha '(97 . 100))
+;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 
 ;; Fonts
 (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'light :height 130)
