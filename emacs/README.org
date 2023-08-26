@@ -54,7 +54,9 @@ When available are optional:
 - C-c ! n: Go to next error
 - C-c ! p: Go to previous error
 
-* Java 
+* Java
+
+*With the package =semgrep= installed on my machine the Code Actions simply doesn't work, uninstalling it make Code Actions work very well.*
 
 - C-c l a a: Execute code action
 - C-c l r r: Rename

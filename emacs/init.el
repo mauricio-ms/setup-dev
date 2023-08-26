@@ -220,10 +220,6 @@
     (setq projectile-project-search-path '("~/development")))
   (setq projectile-switch-project-action #'projectile-dired))
 
-(add-hook 'projectile-after-switch-project-hook
-		  (lambda ()
-			(message "SWITCH PROJECT")))
-
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
 
@@ -663,7 +659,8 @@
   (define-key dap-mode-map (kbd "<f8>") #'dap-next)
   (define-key dap-mode-map (kbd "<f9>") #'dap-continue))
 
-(use-package dap-java
+(load "~/development/github/lsp-java/dap-java.el")
+(use-package dap-java-custom
   :ensure nil
   :after (lsp-java)
   :config
@@ -684,12 +681,12 @@
 ;; perfomance tuning
 
 ;; Avoid garbage collection at statup
-(setq gc-cons-threshold most-positive-fixnum ; 2^61 bytes
+(setq gc-cons-threshold most-positive-fixnum ;; 2^61 bytes
       gc-cons-percentage 0.6)
 
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (setq gc-cons-threshold 300000000 ; 300mb	
+    (setq gc-cons-threshold 300000000 ;; 300mb	
           gc-cons-percentage 0.1)))
 
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
