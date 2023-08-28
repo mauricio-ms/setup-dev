@@ -278,6 +278,8 @@
 (use-package org
   :hook (org-mode . setup-dev/org-mode-setup)
   :config
+  (setq org-image-actual-width nil)
+  
   (setq org-ellipsis " ▾")
 
   (setq org-agenda-start-with-log-mode t)
@@ -686,7 +688,7 @@
 
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (setq gc-cons-threshold 300000000 ;; 300mb	
+    (setq gc-cons-threshold 300000000 ;; 300mb
           gc-cons-percentage 0.1)))
 
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
