@@ -31,6 +31,19 @@
 ;; Set up the visible bell
 (setq visible-bell t)
 
+;; Config ibuffer-formats to leverage from larger monitors on commands like counsel-ibuffer
+(setq ibuffer-formats
+      '((mark modified read-only " "
+              (name 60 60 :left :elide) ;; change: 60s were originally 18s
+              " "
+              (size 9 -1 :right)
+              " "
+              (mode 16 16 :left :elide)
+              " " filename-and-process)
+        (mark " "
+              (name 16 -1)
+              " " filename)))
+
 ;; Let the desktop background show through
 ;; (set-frame-parameter (selected-frame) 'alpha '(97 . 100))
 ;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
@@ -84,6 +97,8 @@
 		sql-interactive-mode-hook
 		graphql-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+(use-package load-relative)
 
 (use-package command-log-mode)
 
@@ -612,7 +627,9 @@
 
 ;; Java
 (use-package flycheck
-  :init (global-flycheck-mode))
+  :init (global-flycheck-mode)
+  :custom
+  (flycheck-emacs-lisp-load-path 'inherit))
 
 (use-package yasnippet
   :config
