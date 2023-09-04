@@ -678,8 +678,7 @@
   (define-key dap-mode-map (kbd "<f8>") #'dap-next)
   (define-key dap-mode-map (kbd "<f9>") #'dap-continue))
 
-(load "~/development/github/lsp-java/dap-java.el")
-(use-package dap-java-custom
+(use-package dap-java
   :ensure nil
   :after (lsp-java)
   :config
