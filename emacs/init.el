@@ -690,6 +690,8 @@
    :prefix lsp-keymap-prefix
    "t m" #'dap-java-debug-test-method))
 
+(use-package helm)
+
 (use-package helm-lsp
   :after (lsp-mode)
   :commands (helm-lsp-workspace-symbol)
