@@ -34,6 +34,9 @@ asdf global java openjdk-20
 
 It’s a great idea to install fd which is much faster than find.
 https://github.com/sharkdp/fd
+** ripgrep
+
+Install ripgrep and rg packages for leverage more performant searches from packages that use it when present in the syystem.
 
 * Resolution
 # List resolutions

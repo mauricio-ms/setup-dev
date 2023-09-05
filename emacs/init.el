@@ -293,6 +293,8 @@
 (use-package org
   :hook (org-mode . setup-dev/org-mode-setup)
   :config
+  (setq org-image-actual-width nil)
+  
   (setq org-ellipsis " ▾")
 
   (setq org-agenda-start-with-log-mode t)
@@ -676,8 +678,7 @@
   (define-key dap-mode-map (kbd "<f8>") #'dap-next)
   (define-key dap-mode-map (kbd "<f9>") #'dap-continue))
 
-(load "~/development/github/lsp-java/dap-java.el")
-(use-package dap-java-custom
+(use-package dap-java
   :ensure nil
   :after (lsp-java)
   :config
@@ -705,7 +706,7 @@
 
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (setq gc-cons-threshold 300000000 ;; 300mb	
+    (setq gc-cons-threshold 300000000 ;; 300mb
           gc-cons-percentage 0.1)))
 
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
