@@ -60,3 +60,13 @@ Copy it to ~$HOME/.fonts~ (create the directory if it doesn't exists)
 Install JetBrainsMono
 iosevka-alie
 https://github.com/googlefonts/noto-emoji/raw/main/fonts/NotoColorEmoji.ttf
+
+* CURL
+
+Downloading file directly to S3:
+
+#+begin_src shell
+
+  curl -i <url> | aws s3 cp - s3://<bucket-name>/<file-name>
+  
+#+end_src
