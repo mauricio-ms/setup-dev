@@ -6,6 +6,22 @@ mkdir ~/.config/.emacs-default/snippets/java-mode
 ln -s ~/development/setup-dev/emacs/snippets/java/assert-equals ~/.config/.emacs-default/snippets/java-mode/assert-equals
 ln -s ~/development/setup-dev/emacs/snippets/java/test ~/.config/.emacs-default/snippets/java-mode/test
 
+
+* Emacs Basics
+
+** Key Bindings
+
+- =C-h k= - Find function by keymap
+- =C-h m= - Enumerate all the active minor and major mode key bindings in the current buffer
+- =<prefix> C-h= - Get a list of all keys that belong to that prefix
+- =M-x describe-keymap= - Describe a keymap
+- =C-M-x= - Evalutes the top-level expression
+- =C-x 8 RET= - Select unicode character to insert
+
+** Utilities
+
+- =C-u <number> <key>= - Repeat ~<key>~, ~<number>~ times
+
 * Minibuffer History
 
 - =M-p= - Go to previous history record saved
