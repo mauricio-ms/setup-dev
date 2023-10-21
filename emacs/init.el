@@ -566,6 +566,29 @@
   (evil-collection-define-key 'normal 'dired-mode-map
 	"H" 'dired-hide-dotfiles-mode))
 
+;; ecj-sql
+(use-package flx-ido)
+
+(use-package auto-complete
+  :config
+  (define-key ac-mode-map (kbd "C-M-c") 'auto-complete))
+
+(use-package ejc-sql
+  :config
+  (setq clomacs-httpd-default-port 8090)
+  (setq ejc-use-flx t)
+  (add-hook 'ejc-sql-minor-mode-hook
+          (lambda ()
+            (auto-complete-mode t)
+            (ejc-ac-setup)))
+  (add-hook 'ejc-sql-minor-mode-hook
+			(lambda ()
+              (ejc-eldoc-setup))))
+
+(add-hook 'sql-mode-hook
+          (lambda ()
+			(ejc-sql-mode)))
+
 ;; LSP
 (defun efs/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))

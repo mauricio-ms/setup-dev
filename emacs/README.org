@@ -22,6 +22,19 @@ ln -s ~/development/setup-dev/emacs/snippets/java/test ~/.config/.emacs-default/
 
 - =C-u <number> <key>= - Repeat ~<key>~, ~<number>~ times
 
+** Adding Hook by file type opened
+
+#+begin_src elisp
+
+  ;; GQL example
+  (add-hook 'find-file-hook 'gql-buffers-hook)
+  (defun gql-buffers-hook ()
+    (when (string= (file-name-extension buffer-file-name) "gql") 
+      ;; code to run
+      ))
+
+#+end_src
+
 * Minibuffer History
 
 - =M-p= - Go to previous history record saved
@@ -340,3 +353,23 @@ These commands allos you to enable profiles for different purposes
   :hook (dired-mode . all-the-icons-dired-mode))
 
 #+end_src
+* SQL
+
+** ecj-sql
+
+*** Installing drivers
+
+#+begin_src shell
+  mvn org.apache.maven.plugins:maven-dependency-plugin:get -Dartifact=mysql:mysql-connector-java:8.0.21
+#+end_src
+
+*** Commands
+
+To use the key bindings the ~ejc-sql-mode~ should be enabled.
+
+- =ejc-invalidate-cache=
+- =C-c ei= - connect interactively
+- =C-c ec= - connect to a pre-configured connection
+- =C-c C-c= - eval at point
+- =C-M-c= - Trigger autocomplete
+- =C-c C-c= - Run SQL
