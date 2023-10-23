@@ -5,10 +5,7 @@
 mkdir ~/.config/.emacs-default/snippets/java-mode
 ln -s ~/development/setup-dev/emacs/snippets/java/assert-equals ~/.config/.emacs-default/snippets/java-mode/assert-equals
 ln -s ~/development/setup-dev/emacs/snippets/java/test ~/.config/.emacs-default/snippets/java-mode/test
-
-
 * Emacs Basics
-
 ** Key Bindings
 
 - =C-h k= - Find function by keymap
@@ -36,10 +33,8 @@ ln -s ~/development/setup-dev/emacs/snippets/java/test ~/.config/.emacs-default/
 #+end_src
 
 * Minibuffer History
-
 - =M-p= - Go to previous history record saved
 - =M-n= - Go to next history record saved
-   
 * Projectile
 ** Prefixes
 
@@ -78,11 +73,9 @@ When available are optional:
 - C-c p t: Toggle between implementation and test
   
 * Flycheck
-
 - C-c ! l: List errors
 - C-c ! n: Go to next error
 - C-c ! p: Go to previous error
-
 * Java
 
 *With the package =semgrep= installed on my machine the Code Actions simply doesn't work, uninstalling it make Code Actions work very well.*
@@ -373,3 +366,8 @@ To use the key bindings the ~ejc-sql-mode~ should be enabled.
 - =C-c C-c= - eval at point
 - =C-M-c= - Trigger autocomplete
 - =C-c C-c= - Run SQL
+* Notes
+** Org Roam
+*** Key Bindings
+- =C-c n f= - Find note or create a new one
+- =C-c n i= - Insert link to another note (existent or not)
