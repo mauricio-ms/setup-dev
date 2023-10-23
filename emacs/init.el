@@ -485,6 +485,30 @@
 	  (org-babel-tangle))))
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
 
+;; org roam
+(use-package org-roam
+  :custom
+  (org-roam-directory (file-truename "~/development/notebook/roam-notes"))
+  (org-roam-completion-everywhere t)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+		 ("C-c n f" . org-roam-node-find)
+		 ("C-c n i" . org-roam-node-insert)
+		 :map org-mode-map
+		 ("C-M-i" . completion-at-point)
+		 :map org-roam-dailies-map
+		 ("Y" . org-roam-dailies-capture-yesterday)
+		 ("T" . org-roam-dailies-capture-tomorrow))
+  :bind-keymap
+  ("C-c n d" . org-roam-dailies-map)
+  :config
+  (require 'org-roam-dailies) ;; Ensure the keymap is available
+  (org-roam-setup))
+
+;; drag and drop images to org-mode buffers
+(use-package org-download)
+;; Drag-and-drop to `dired`
+(add-hook 'dired-mode-hook 'org-download-enable)
+
 (use-package evil-nerd-commenter
   :bind ("M-/" . evilnc-comment-or-uncomment-lines))
 
@@ -565,6 +589,29 @@
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
 	"H" 'dired-hide-dotfiles-mode))
+
+;; ecj-sql
+(use-package flx-ido)
+
+(use-package auto-complete
+  :config
+  (define-key ac-mode-map (kbd "C-M-c") 'auto-complete))
+
+(use-package ejc-sql
+  :config
+  (setq clomacs-httpd-default-port 8090)
+  (setq ejc-use-flx t)
+  (add-hook 'ejc-sql-minor-mode-hook
+          (lambda ()
+            (auto-complete-mode t)
+            (ejc-ac-setup)))
+  (add-hook 'ejc-sql-minor-mode-hook
+			(lambda ()
+              (ejc-eldoc-setup))))
+
+(add-hook 'sql-mode-hook
+          (lambda ()
+			(ejc-sql-mode)))
 
 ;; LSP
 (defun efs/lsp-mode-setup ()
