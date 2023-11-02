@@ -249,6 +249,10 @@
 (use-package forge) ;; TODO The GitHub authentication needs to be configure, check at magit documentation page
 
 ;; org roam
+;; Set variable to use Personal Projects if it is still not set
+(if (not (boundp 'setup-dev-project-type))
+	(setq setup-dev-project-type "Project"))
+
 (use-package org-roam
   :demand t
   :custom
@@ -290,7 +294,7 @@
 
 (defun setup-dev/org-roam-refresh-agenda-list ()
   (interactive)
-  (setq org-agenda-files (setup-dev/org-roam-list-notes-by-tag "Project")))
+  (setq org-agenda-files (setup-dev/org-roam-list-notes-by-tag setup-dev-project-type)))
 
 ;; Build the agenda list the first time for the session
 (setup-dev/org-roam-refresh-agenda-list)
@@ -314,11 +318,11 @@
   (org-roam-node-find
    nil
    nil
-   (setup-dev/org-roam-filter-by-tag "Project")
+   (setup-dev/org-roam-filter-by-tag setup-dev-project-type)
    nil
    :templates
-   '(("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: Project")
+   `(("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ,(concat "#+title: ${title}\n#+category: ${title}\n#+filetags: " setup-dev-project-type))
       :unnarrowed t))))
 
 (defun setup-dev/org-roam-capture-task ()
@@ -329,10 +333,10 @@
   ;; Capture the new task, creating the project file if necessary
   (org-roam-capture- :node (org-roam-node-read
                             nil
-                            (setup-dev/org-roam-filter-by-tag "Project"))
-                     :templates '(("p" "project" plain "** TODO %?"
+                            (setup-dev/org-roam-filter-by-tag setup-dev-project-type))
+                     :templates `(("p" "project" plain "** TODO %?"
                                    :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
-                                                          "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
+                                                          ,(concat "#+title: ${title}\n#+category: ${title}\n#+filetags: " setup-dev-project-type)
                                                           ("Tasks"))))))
 
 (defun setup-dev/org-roam-copy-todo-to-today ()
