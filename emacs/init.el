@@ -452,11 +452,9 @@
         ((org-agenda-overriding-header "Next Tasks")))
       (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
 
-    ("n" "Next Tasks"
-     ((todo "NEXT"
-        ((org-agenda-overriding-header "Next Tasks")))))
-
-    ("W" "Work Tasks" tags-todo "+work-email")
+    ("b" "Backlog"
+     ((todo "BACKLOG"
+        ((org-agenda-overriding-header "Backlog")))))
 
     ;; Low-effort next actions
     ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
@@ -465,11 +463,7 @@
       (org-agenda-files org-agenda-files)))
 
     ("w" "Workflow Status"
-     ((todo "BACKLOG"
-            ((org-agenda-overriding-header "Backlog")
-             (org-agenda-todo-list-sublevels nil)
-             (org-agenda-files org-agenda-files)))
-	  (todo "TODO"
+     ((todo "TODO"
             ((org-agenda-overriding-header "To Do")
              (org-agenda-files org-agenda-files)))
       (todo "ACTIVE"
