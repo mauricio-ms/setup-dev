@@ -421,8 +421,7 @@
   (setq org-habit-graph-column 60)
   
   (setq org-todo-keywords
-	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-	  (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w)" "INTERRUPT(i@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+	'((sequence "BACKLOG(b)" "TODO(t)" "ACTIVE(a)" "WAIT(w)" "INTERRUPT(i)" "WAITING_FOR_STAGE(s)" "WAITING_FOR_RELEASE(r)" "|" "DONE(d)")))
 
   (if (not org-refile-targets)
 	  (setq org-refile-targets
@@ -466,31 +465,28 @@
       (org-agenda-files org-agenda-files)))
 
     ("w" "Workflow Status"
-     ((todo "WAIT"
-            ((org-agenda-overriding-header "Waiting on External")
-             (org-agenda-files org-agenda-files)))
-      (todo "REVIEW"
-            ((org-agenda-overriding-header "In Review")
-             (org-agenda-files org-agenda-files)))
-      (todo "PLAN"
-            ((org-agenda-overriding-header "In Planning")
+     ((todo "BACKLOG"
+            ((org-agenda-overriding-header "Backlog")
              (org-agenda-todo-list-sublevels nil)
              (org-agenda-files org-agenda-files)))
-      (todo "BACKLOG"
-            ((org-agenda-overriding-header "Project Backlog")
-             (org-agenda-todo-list-sublevels nil)
-             (org-agenda-files org-agenda-files)))
-      (todo "READY"
-            ((org-agenda-overriding-header "Ready for Work")
+	  (todo "TODO"
+            ((org-agenda-overriding-header "To Do")
              (org-agenda-files org-agenda-files)))
       (todo "ACTIVE"
-            ((org-agenda-overriding-header "Active Projects")
+            ((org-agenda-overriding-header "In Progress")
+             (org-agenda-todo-list-sublevels nil)
              (org-agenda-files org-agenda-files)))
-      (todo "COMPLETED"
-            ((org-agenda-overriding-header "Completed Projects")
+	  (todo "WAIT"
+            ((org-agenda-overriding-header "Waiting on External")
              (org-agenda-files org-agenda-files)))
-      (todo "CANC"
-            ((org-agenda-overriding-header "Cancelled Projects")
+      (todo "INTERRUPT"
+            ((org-agenda-overriding-header "Interrupted")
+             (org-agenda-files org-agenda-files)))
+      (todo "WAITING_FOR_STAGE"
+            ((org-agenda-overriding-header "Waiting to be Ready For Stage")
+             (org-agenda-files org-agenda-files)))
+      (todo "WAITING_FOR_RELEASE"
+            ((org-agenda-overriding-header "Waiting to be Ready For Release")
              (org-agenda-files org-agenda-files)))))))
 
   (setq org-capture-templates
