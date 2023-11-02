@@ -424,10 +424,10 @@
 	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
 	  (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w)" "INTERRUPT(i@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
 
-  (setq org-refile-targets
-    '(("archive.org" :maxlevel . 1)
-      ("tasks.org" :maxlevel . 1)))
-
+  (if (not org-refile-targets)
+	  (setq org-refile-targets
+			'(("~/development/notebook/org-files/archive.org" :maxlevel . 1))))
+  
   ;; Save Org buffers after refiling!
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
   
