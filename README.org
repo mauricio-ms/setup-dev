@@ -70,3 +70,36 @@ Downloading file directly to S3:
   curl -i <url> | aws s3 cp - s3://<bucket-name>/<file-name>
   
 #+end_src
+
+* Linux New Setup
+** Backup
+Zip the $HOME/.ssh to have access of the private keys
+Zip the projects folder
+** Setup DEV
+Version Manager: https://github.com/asdf-vm/asdf
+Window Manager: Xmonade or Sway
+Install Emacs
+* VMs
+** MacOS
+*** Installation
+https://oneclick-macos-simple-kvm.notaperson535.is-a.dev/docs/start-here
+Run setup.sh
+Erase disk of ~68GB
+Partition this disk with Extended Journaled 
+Keep running the Installer option, after a couple of time the country wizard will be shown
+*** Running
+Run basic.sh
+* XMonad 
+M-shift-return: Open new terminal
+M-space: Change layout mode
+M-j: Moves windows focus up
+M-k: Moves windows focus down
+M-comma: Increase windows stored in the master pane
+M-period: Decrease windows stored in the master pane
+M-h, mod-l: Resize the ratio between master and subordinate windows
+M-q: Reload xmonad config
+M-shift-c: Close current window
+M-shift-q: Quit xmonad
+Switch keyboard: setxkbmap us
+
+COPY ~/.config/xmonad.hs and ~/xmobarrc
