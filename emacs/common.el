@@ -45,6 +45,8 @@
               (name 16 -1)
               " " filename)))
 
+(load-library "~/development/setup-dev/emacs/utils.el")
+
 ;; Let the desktop background show through
 ;; (set-frame-parameter (selected-frame) 'alpha '(97 . 100))
 ;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
