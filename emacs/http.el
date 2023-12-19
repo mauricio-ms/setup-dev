@@ -6,7 +6,7 @@
 
 ;;; Code:
 
-(defconst http-request-dir "~/development/notebook/http/"
+(defconst http-requests-dir "~/development/notebook/http/"
   "Constant to define the directory to store the request files.")
 (defconst http-request-extension ".req"
   "Constant to define the extension of the request files.")
@@ -27,7 +27,7 @@
 						   (if (not (http-request--exists? selected))
 							   (http-request--create selected))
 						   (http-request--open selected))))
-(global-set-key (kbd "C-c r n") 'http-request-find)
+(global-set-key (kbd "C-c r h") 'http-request-find)
 
 (defun http-request--list ()
   "Get a list of requests."
@@ -36,9 +36,9 @@
    (http-request--files)))
 
 (defun http-request--files ()
-  "Get a list of files contained in HTTP-REQUEST-DIR."
+  "Get a list of files contained in HTTP-REQUESTS-DIR."
   (directory-files
-   http-request-dir
+   http-requests-dir
    nil
    ".req"))
 
@@ -80,7 +80,7 @@
 
 (defun http-request--path (request)
   "Get the path of the file for REQUEST."
-  (concat http-request-dir request http-request-extension))
+  (concat http-requests-dir request http-request-extension))
 
 (provide 'http)
 
