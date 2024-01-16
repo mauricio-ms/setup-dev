@@ -14,6 +14,7 @@ ln -s ~/development/setup-dev/emacs/snippets/java/test ~/.config/.emacs-default/
 - =M-x describe-keymap= - Describe a keymap
 - =C-M-x= - Evalutes the top-level expression
 - =C-x 8 RET= - Select unicode character to insert
+- =C-c C-l= - Add link to org-mode buffer
 
 ** Utilities
 
@@ -149,6 +150,8 @@ Manual: https://company-mode.github.io/manual/
 rm ~/development/dependencies/lombok.jar
 # restart emacs
 
+* Ivy
+- =C-M-j= - Immediatelly done
 * Org Mode
 
 - =C-c C-x C-v=: Toggle the display of inline images
