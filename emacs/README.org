@@ -154,17 +154,14 @@ rm ~/development/dependencies/lombok.jar
 - =C-M-j= - Immediatelly done
 * Org Mode
 
-- =C-c C-x C-v=: Toggle the display of inline images
+- =C-c C-x C-v= - Toggle the display of inline images
 
 ** Org Babel
-
-
 
 - =C-c c=: Run code block
 - =C-c C-v t=: Tangle code block
   
 ** Presentation
-
 
 These packages allow you to create presentations from org mode files
 
@@ -218,9 +215,7 @@ These commands allos you to enable profiles for different purposes
 
 *** Org Present 
 
-
-** Key Bindings
-
+**** Key Bindings
 
 | Key       | Command                  | Description                            |
 |-----------+--------------------------+----------------------------------------|
@@ -231,20 +226,21 @@ These commands allos you to enable profiles for different purposes
 | ~C-c C-q~ | =org-present-quit=       | Exit the presentation and reset buffer |
 | ~C-c C-r~ | =org-present-read-only=  | Make the slides read-only              |
 | ~C-c C-w~ | =org-present-read-write= | Make the slides writable               |
+
 * File Management with Dired
 
 ** Opening
 
-- =C-x d=: Runs dired
-- =C-x C-j=: Jump to Dird buffer corresponding to current buffer
+- =C-x d= - Open Dired
+- =C-x C-j= - Jump to Dired buffer corresponding to the current buffer
 
 ** Navigation
 
-- =n= / =j= - next line
-- =p= / =k= - previous line
-- =j= / =J= - jump to file in buffer
-- =RET= - select file or directory
-- =^= - go to parent directory
+- =n= / =j= - Go to next line
+- =p= / =k= - Go to previous line
+- =j= / =J= - Jump to file in buffer
+- =RET= - Select file or directory
+- =^= - Go to parent directory
 - =S-RET= / =g O= - Open file in "other" window
 - =M-RET= - Show file in other window without focusing (previewing files)
 - =g o= (=dired-view-file=) - Open file but in a "preview" mode, close with =q=
@@ -366,12 +362,15 @@ To use the key bindings the ~ejc-sql-mode~ should be enabled.
 - =ejc-invalidate-cache=
 - =C-c ei= - connect interactively
 - =C-c ec= - connect to a pre-configured connection
-- =C-c C-c= - eval at point
 - =C-M-c= - Trigger autocomplete
 - =C-c C-c= - Run SQL
+  
 * Notes
+
 ** Org Roam
+
 *** Key Bindings
+
 - =C-c n f= - Find note or create a new one
 - =C-c n i= - Insert link to another note (existent or not)
 - =C-c n I= - Insert link to another note creating it immediately without opening the capture template
@@ -381,7 +380,9 @@ To use the key bindings the ~ejc-sql-mode~ should be enabled.
 - =C-c n l= - Open a buffer with the backlinks from the current note
 - =org-id-get-create= - Can be used to create IDs for headers, so the headers will appears as notes in the find selection list
 - =org-roal-alias-add= - Allow you to define alias for generic names that can be repeated in multiple notes
+  
 *** Dailies
+
 - =C-c n d n= - Capture note for the current day
 - =C-c n d d= - Open the notes for the current day
 - =C-c n d Y= - Capture note for yesterday

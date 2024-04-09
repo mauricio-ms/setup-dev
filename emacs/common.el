@@ -562,6 +562,9 @@
 
 ;; drag and drop images to org-mode buffers
 (use-package org-download)
+
+(use-package simple-httpd)
+
 ;; Drag-and-drop to `dired`
 (add-hook 'dired-mode-hook 'org-download-enable)
 
@@ -647,27 +650,32 @@
 	"H" 'dired-hide-dotfiles-mode))
 
 ;; ecj-sql
-(use-package flx-ido)
+;; =================== The problem is in the cider package:
+;; https://github.com/clojure-emacs/cider/blob/master/cider-overlays.el
+;; Track this issue to see if it is fixed
+;; https://github.com/clojure-emacs/cider/issues/3596
+;; ===================
 
-(use-package auto-complete
-  :config
-  (define-key ac-mode-map (kbd "C-M-c") 'auto-complete))
+;; (use-package flx-ido)
 
-(use-package ejc-sql
-  :config
-  (setq clomacs-httpd-default-port 8090)
-  (setq ejc-use-flx t)
-  (add-hook 'ejc-sql-minor-mode-hook
-          (lambda ()
-            (auto-complete-mode t)
-            (ejc-ac-setup)))
-  (add-hook 'ejc-sql-minor-mode-hook
-			(lambda ()
-              (ejc-eldoc-setup))))
+;; (use-package auto-complete
+;;   :config
+;;   (define-key ac-mode-map (kbd "C-M-c") 'auto-complete))
 
-(add-hook 'sql-mode-hook
-          (lambda ()
-			(ejc-sql-mode)))
+;; (use-package ejc-sql)
+;; (setq clomacs-httpd-default-port 8090)
+;; (setq ejc-use-flx t)
+
+;; (add-hook 'ejc-sql-minor-mode-hook
+;;           (lambda ()
+;;             (auto-complete-mode t)
+;;             (ejc-ac-setup)))
+;; (add-hook 'ejc-sql-minor-mode-hook
+;; 		  (lambda ()
+;;             (ejc-eldoc-setup)))
+;; (add-hook 'sql-mode-hook
+;;           (lambda ()
+;; 			(ejc-sql-mode)))
 
 ;; LSP
 (defun efs/lsp-mode-setup ()

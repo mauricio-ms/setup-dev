@@ -103,3 +103,10 @@ M-shift-q: Quit xmonad
 Switch keyboard: setxkbmap us
 
 COPY ~/.config/xmonad.hs and ~/xmobarrc
+
+* YouTube DL
+
+# Download a PlayList with Video and Audio
+yt-dlp -f 'bv*+ba' "playlist-url"
+# Download a Playlist with only Audio
+yt-dlp -f 'ba' "playlist-url"
