@@ -5,6 +5,32 @@
 mkdir ~/.config/.emacs-default/snippets/java-mode
 ln -s ~/development/setup-dev/emacs/snippets/java/assert-equals ~/.config/.emacs-default/snippets/java-mode/assert-equals
 ln -s ~/development/setup-dev/emacs/snippets/java/test ~/.config/.emacs-default/snippets/java-mode/test
+
+** MacOS only
+
+#+begin_src bash
+
+  # To maked dired work
+  brew install coreutils
+  # To make org-download work
+  brew install pngpaste
+
+#+end_src
+
+
+** Install Fonts
+
+The first time you load your configuration on a new machine, you'll
+need to run the following command interactively so that mode line icons
+display correctly:
+
+#+begin_src bash
+
+  M-x all-the-icons-install-fonts
+  # If that doesn't work, try:
+  M-x nerd-icons-install-fonts
+
+#+end_src
 * Emacs Basics
 ** Key Bindings
 
@@ -202,7 +228,7 @@ To start with timer, run =org-tree-slide-play-with-timer=.
 
 **** Profiles
 
-These commands allos you to enable profiles for different purposes
+These commands allows you to enable profiles for different purposes
 
 - =org-tree-slide-simple-profile=: For simple use
 - =org-tree-slide-presentation-profile=: For Presentation use

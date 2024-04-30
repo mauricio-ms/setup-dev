@@ -123,11 +123,6 @@
   :config
   (ivy-mode 1))
 
-;; NOTE: The first time you load your configuration on a new machine, you'll
-;; need to run the following command interactively so that mode line icons
-;; display correctly:
-;;
-;; M-x all-the-icons-install-fonts
 (use-package all-the-icons)
 
 (use-package doom-modeline
@@ -573,7 +568,7 @@
 
 (use-package term
   :config
-  (setq explicit-shell-file-name "bash") ;; Change this to zsh, etc
+  (setq explicit-shell-file-name "zsh") ;; Change this to zsh, etc
   ;;(setq explicit-zsh-args '())         ;; Use 'explicit-<shell>-args for shell-specific args
 
   ;; Match the default Bash shell prompt.  Update this if you have a custom prompt
@@ -625,7 +620,10 @@
   :ensure nil
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
-  :custom ((dired-listing-switches "-agho --group-directories-first"))
+  :custom
+  ((dired-listing-switches "-agho --group-directories-first")
+   ;; For MacOS only, requires coreutils package installation
+   (insert-directory-program "gls" dired-use-ls-dired t))
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
     "h" 'dired-single-up-directory
