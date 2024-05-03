@@ -375,6 +375,8 @@ These commands allows you to enable profiles for different purposes
 
 ** ecj-sql
 
+First of all, install [[https://leiningen.org/][Leiningen]].
+
 *** Installing drivers
 
 #+begin_src shell

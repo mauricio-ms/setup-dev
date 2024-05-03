@@ -654,26 +654,26 @@
 ;; https://github.com/clojure-emacs/cider/issues/3596
 ;; ===================
 
-;; (use-package flx-ido)
+(use-package flx-ido)
 
-;; (use-package auto-complete
-;;   :config
-;;   (define-key ac-mode-map (kbd "C-M-c") 'auto-complete))
+(use-package auto-complete
+  :config
+  (define-key ac-mode-map (kbd "C-M-c") 'auto-complete))
 
-;; (use-package ejc-sql)
-;; (setq clomacs-httpd-default-port 8090)
-;; (setq ejc-use-flx t)
+(use-package ejc-sql)
+(setq clomacs-httpd-default-port 8090)
+(setq ejc-use-flx t)
 
-;; (add-hook 'ejc-sql-minor-mode-hook
-;;           (lambda ()
-;;             (auto-complete-mode t)
-;;             (ejc-ac-setup)))
-;; (add-hook 'ejc-sql-minor-mode-hook
-;; 		  (lambda ()
-;;             (ejc-eldoc-setup)))
-;; (add-hook 'sql-mode-hook
-;;           (lambda ()
-;; 			(ejc-sql-mode)))
+(add-hook 'ejc-sql-minor-mode-hook
+          (lambda ()
+            (auto-complete-mode t)
+            (ejc-ac-setup)))
+(add-hook 'ejc-sql-minor-mode-hook
+		  (lambda ()
+            (ejc-eldoc-setup)))
+(add-hook 'sql-mode-hook
+          (lambda ()
+			(ejc-sql-mode)))
 
 ;; LSP
 (defun efs/lsp-mode-setup ()
