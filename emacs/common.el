@@ -321,7 +321,8 @@
   ;; Add the project file to the agenda after capture is finished
   (add-hook 'org-capture-after-finalize-hook #'setup-dev/org-roam-project-finalize-hook)
 
-  (let ((tag (concat "Project" setup-dev-project-type)))
+  (let ((tag (concat "Project" setup-dev-project-type))
+		(org-roam-directory (setup-dev/org-roam-get-directory)))
    ;; Select a project file to open, creating it if necessary
    (org-roam-node-find
 	nil
@@ -336,15 +337,26 @@
 (defun setup-dev/org-roam-find-work ()
   (interactive)
   ;; Select an work note file to open, creating it if necessary
-  (org-roam-node-find
-   nil
-   nil
-   (setup-dev/org-roam-filter-by-tag setup-dev-project-type)
-   nil
-   :templates
-   `(("p" "work" plain ""
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ,(concat "#+title: ${title}\n#+category: ${title}\n#+filetags: " setup-dev-project-type))
-      :unnarrowed t))))
+  (let ((org-roam-directory (setup-dev/org-roam-get-directory-work-notes)))
+	(org-roam-node-find
+	 nil
+	 nil
+	 (setup-dev/org-roam-filter-by-tag setup-dev-project-type)
+	 nil
+	 :templates
+	 `(("p" "work" plain ""
+		:if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ,(concat "#+title: ${title}\n#+category: ${title}\n#+filetags: " setup-dev-project-type))
+		:unnarrowed t)))))
+
+(defun setup-dev/org-roam-get-directory ()
+  (if (equal setup-dev-project-type "Personal")
+	  org-roam-directory
+	(setup-dev/org-roam-get-directory-work-notes)))
+
+(defun setup-dev/org-roam-get-directory-work-notes ()
+  (file-truename
+   (concat "~/development/notebook/roam-notes/"
+		   (s-downcase setup-dev-project-type))))
 
 (defun setup-dev/org-roam-capture-task ()
   (interactive)
