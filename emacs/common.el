@@ -252,10 +252,11 @@
   (org-roam-directory (file-truename "~/development/notebook/roam-notes"))
   (org-roam-completion-everywhere t)
   :bind (("C-c n l" . org-roam-buffer-toggle)
-		 ("C-c n f" . org-roam-node-find)
+		 ("C-c n f" . setup-dev/org-roam-find-personal)
 		 ("C-c n i" . org-roam-node-insert)
 		 ("C-c n I" . org-roam-node-insert-immediate)
 		 ("C-c n p" . setup-dev/org-roam-find-project)
+		 ("C-c n w" . setup-dev/org-roam-find-work)
 		 ("C-c n t" . setup-dev/org-roam-capture-task)
 		 :map org-mode-map
 		 ("C-M-i" . completion-at-point)
@@ -292,6 +293,19 @@
 ;; Build the agenda list the first time for the session
 (setup-dev/org-roam-refresh-agenda-list)
 
+(defun setup-dev/org-roam-find-personal ()
+  (interactive)
+  ;; Select a personal note file to open, creating it if necessary
+  (org-roam-node-find
+   nil
+   nil
+   (setup-dev/org-roam-filter-by-tag "Personal")
+   nil
+   :templates
+   `(("p" "work" plain ""
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ,(concat "#+title: ${title}\n#+category: ${title}\n#+filetags: Personal"))
+      :unnarrowed t))))
+
 (defun setup-dev/org-roam-project-finalize-hook ()
   "Adds the captured project file to `org-agenda-files' if the capture was not aborted."
   ;; Remove the hook since it was added temporarily
@@ -307,14 +321,28 @@
   ;; Add the project file to the agenda after capture is finished
   (add-hook 'org-capture-after-finalize-hook #'setup-dev/org-roam-project-finalize-hook)
 
-  ;; Select a project file to open, creating it if necessary
+  (let ((tag (concat "Project" setup-dev-project-type)))
+   ;; Select a project file to open, creating it if necessary
+   (org-roam-node-find
+	nil
+	nil
+	(setup-dev/org-roam-filter-by-tag tag)
+	nil
+	:templates
+	`(("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ,(concat "#+title: ${title}\n#+category: ${title}\n#+filetags: " tag))
+       :unnarrowed t)))))
+
+(defun setup-dev/org-roam-find-work ()
+  (interactive)
+  ;; Select an work note file to open, creating it if necessary
   (org-roam-node-find
    nil
    nil
    (setup-dev/org-roam-filter-by-tag setup-dev-project-type)
    nil
    :templates
-   `(("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+   `(("p" "work" plain ""
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ,(concat "#+title: ${title}\n#+category: ${title}\n#+filetags: " setup-dev-project-type))
       :unnarrowed t))))
 

@@ -1,5 +1,5 @@
 ;; setup-dev config
-(setq setup-dev-project-type "Project")
+(setq setup-dev-project-type "Personal")
 
 ;; org-agenda config
 (setq org-todo-keywords
