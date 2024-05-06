@@ -253,6 +253,7 @@
   (org-roam-completion-everywhere t)
   :bind (("C-c n l" . org-roam-buffer-toggle)
 		 ("C-c n f" . setup-dev/org-roam-find-personal)
+		 ("C-c n b" . setup-dev/org-roam-capture-inbox)
 		 ("C-c n i" . org-roam-node-insert)
 		 ("C-c n I" . org-roam-node-insert-immediate)
 		 ("C-c n p" . setup-dev/org-roam-find-project)
@@ -348,6 +349,13 @@
 		:if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ,(concat "#+title: ${title}\n#+category: ${title}\n#+filetags: " setup-dev-project-type))
 		:unnarrowed t)))))
 
+(defun setup-dev/org-roam-capture-inbox ()
+  (interactive)
+  (let ((org-roam-directory (setup-dev/org-roam-get-directory-work-notes)))
+	(org-roam-capture- :node (org-roam-node-create)
+                       :templates `(("i" "inbox" plain "* %?"
+									 :if-new (file+head "Inbox.org" ,(concat "#+title: Inbox\n#+filetags: " setup-dev-project-type)))))))
+
 (defun setup-dev/org-roam-get-directory ()
   (if (equal setup-dev-project-type "Personal")
 	  org-roam-directory
@@ -363,14 +371,16 @@
   ;; Add the project file to the agenda after capture is finished
   (add-hook 'org-capture-after-finalize-hook #'setup-dev/org-roam-project-finalize-hook)
 
-  ;; Capture the new task, creating the project file if necessary
-  (org-roam-capture- :node (org-roam-node-read
-                            nil
-                            (setup-dev/org-roam-filter-by-tag setup-dev-project-type))
-                     :templates `(("p" "project" plain "** TODO %?"
-                                   :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
-                                                          ,(concat "#+title: ${title}\n#+category: ${title}\n#+filetags: " setup-dev-project-type)
-                                                          ("Tasks"))))))
+  (let ((tag (concat "Project" setup-dev-project-type))
+		(org-roam-directory (setup-dev/org-roam-get-directory)))
+	;; Capture the new task, creating the project file if necessary
+	(org-roam-capture- :node (org-roam-node-read
+                              nil
+                              (setup-dev/org-roam-filter-by-tag tag))
+                       :templates `(("p" "project" plain "** TODO %?"
+									 :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
+															,(concat "#+title: ${title}\n#+category: ${title}\n#+filetags: " tag)
+															("Tasks")))))))
 
 (defun setup-dev/org-roam-copy-todo-to-today ()
   (interactive)
