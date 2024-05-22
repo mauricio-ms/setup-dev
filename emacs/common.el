@@ -279,7 +279,9 @@
 
 (defun setup-dev/org-roam-filter-by-tag (tag-name)
   (lambda (node)
-    (member tag-name (org-roam-node-tags node))))
+	(or
+     (member tag-name (org-roam-node-tags node))
+	 (member (concat "Project" tag-name) (org-roam-node-tags node)))))
 
 (defun setup-dev/org-roam-list-notes-by-tag (tag-name)
   (mapcar #'org-roam-node-file
@@ -289,7 +291,8 @@
 
 (defun setup-dev/org-roam-refresh-agenda-list ()
   (interactive)
-  (setq org-agenda-files (setup-dev/org-roam-list-notes-by-tag setup-dev-project-type)))
+  (setq org-agenda-files (setup-dev/org-roam-list-notes-by-tag setup-dev-project-type))
+  (add-to-list 'org-agenda-files (file-truename "~/development/notebook/org-files/gmail-agenda.org")))
 
 ;; Build the agenda list the first time for the session
 (setup-dev/org-roam-refresh-agenda-list)
