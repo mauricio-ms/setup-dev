@@ -131,7 +131,7 @@
 
 (use-package doom-themes
   :config
-  (load-theme 'doom-palenight t))
+  (load-theme 'doom-dark+ t))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
