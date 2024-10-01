@@ -105,6 +105,9 @@
 
 (use-package command-log-mode)
 
+(use-package vlf)
+(require 'vlf-setup)
+
 (use-package ivy
   :diminish
   :bind (("C-s" . swiper)
@@ -231,8 +234,9 @@
   :init
   (when (file-directory-p "~/development")
     (setq projectile-project-search-path '("~/development")))
-  (setq projectile-switch-project-action #'projectile-dired))
+  (setq projectile-switch-project-action #'projectile-commander))
 
+;; TODO - Check why counsel-projectile-switch-project is not showing the actions
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
 
@@ -727,6 +731,47 @@
 (add-hook 'sql-mode-hook
           (lambda ()
 			(ejc-sql-mode)))
+
+;; llama
+(use-package ellama
+  :init
+  ;; setup key bindings
+  (setopt ellama-keymap-prefix "C-c e")
+  ;; language you want ellama to translate to
+  (setopt ellama-language "English")
+  ;; could be llm-openai for example
+  (require 'llm-ollama)
+  (setopt ellama-provider
+	  (make-llm-ollama
+	   ;; this model should be pulled to use it
+	   ;; value should be the same as you print in terminal during pull
+	   :chat-model "llama3.1"
+	   :embedding-model "nomic-embed-text"
+	   :default-chat-non-standard-params '(("num_ctx" . 8192))))
+  ;; Predefined llm providers for interactive switching.
+  ;; You shouldn't add ollama providers here - it can be selected interactively
+  ;; without it. It is just example.
+  (setopt ellama-providers
+		    '(("zephyr" . (make-llm-ollama
+						   :chat-model "zephyr"
+						   :embedding-model "zephyr"))
+		      ("llama3.1" . (make-llm-ollama
+							 :chat-model "llama3.1"
+							 :embedding-model "llama3.1"))
+		      ("mixtral" . (make-llm-ollama
+							:chat-model "mixtral"
+							:embedding-model "mixtral"))))
+  ;; Naming new sessions with llm
+  (setopt ellama-naming-provider
+	  (make-llm-ollama
+	   :chat-model "llama3.1"
+	   :embedding-model "nomic-embed-text"
+	   :default-chat-non-standard-params '(("stop" . ("\n")))))
+  (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
+  ;; Translation llm provider
+  (setopt ellama-translation-provider (make-llm-ollama
+				       :chat-model "phi3:14b-medium-128k-instruct-q6_K"
+				       :embedding-model "nomic-embed-text")))
 
 ;; LSP
 (defun efs/lsp-mode-setup ()
