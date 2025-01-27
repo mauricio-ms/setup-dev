@@ -239,20 +239,6 @@ These commands allows you to enable profiles for different purposes
 - =C->=: Display the next slide
 - =C-<=: Display the previous slide
 
-*** Org Present 
-
-**** Key Bindings
-
-| Key       | Command                  | Description                            |
-|-----------+--------------------------+----------------------------------------|
-| ~<left>~  | =org-present-prev=       | Move to the previous slide             |
-| ~<right>~ | =org-present-next=       | Move to the next slide                 |
-| ~C-c <~   | =org-present-beginning=  | Move to the first slide                |
-| ~C-c >~   | =org-present-end=        | Move to the last slide                 |
-| ~C-c C-q~ | =org-present-quit=       | Exit the presentation and reset buffer |
-| ~C-c C-r~ | =org-present-read-only=  | Make the slides read-only              |
-| ~C-c C-w~ | =org-present-read-write= | Make the slides writable               |
-
 * File Management with Dired
 
 ** Opening

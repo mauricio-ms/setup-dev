@@ -296,7 +296,9 @@
 (defun setup-dev/org-roam-refresh-agenda-list ()
   (interactive)
   (setq org-agenda-files (setup-dev/org-roam-list-notes-by-tag setup-dev-project-type))
-  (add-to-list 'org-agenda-files (file-truename "~/development/notebook/org-files/gmail-agenda.org")))
+  (if (file-directory-p "~/.org-jira")
+	  (mapc (lambda (x) (add-to-list 'org-agenda-files x))
+			(directory-files "~/.org-jira" t ".org"))))
 
 ;; Build the agenda list the first time for the session
 (setup-dev/org-roam-refresh-agenda-list)
@@ -570,7 +572,11 @@
 									 (org-block-begin-line (:height 0.7) org-block)))
 
   ;; Set a blank header line string to create blank space at the top
-  (setq header-line-format " "))
+  (setq header-line-format " ")
+  
+  ;; Center the presentation and wrap lines
+  (visual-fill-column-mode 1)
+  (visual-line-mode 1))
 
 (defun setup-dev/org-present-prepare-slide (buffer-name heading)
   ;; Show only top-level headlines
@@ -586,9 +592,16 @@
   ;; Reset font customizations
   (setq-local face-remapping-alist '((default variable-pitch default)))
 
-  (setq header-line-format nil))
+  (setq header-line-format nil)
+
+  ;; Stop centering the document
+  (visual-fill-column-mode 0)
+  (visual-line-mode 0))
 
 (use-package org-present)
+
+;; Turn on variable pitch fonts in Org Mode buffers
+(add-hook 'org-mode-hook 'variable-pitch-mode)
 
 ;; Register hooks
 (add-hook 'org-present-mode-hook 'setup-dev/org-present-start)
@@ -669,6 +682,7 @@
     (setq eshell-visual-commands '("htop" "zsh" "vim")))
 
   (eshell-git-prompt-use-theme 'powerline))
+
 
 ;; dired
 (use-package dired-single)
