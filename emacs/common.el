@@ -105,6 +105,9 @@
 
 (use-package command-log-mode)
 
+(use-package vlf)
+(require 'vlf-setup)
+
 (use-package ivy
   :diminish
   :bind (("C-s" . swiper)
@@ -231,8 +234,9 @@
   :init
   (when (file-directory-p "~/development")
     (setq projectile-project-search-path '("~/development")))
-  (setq projectile-switch-project-action #'projectile-dired))
+  (setq projectile-switch-project-action #'projectile-commander))
 
+;; TODO - Check why counsel-projectile-switch-project is not showing the actions
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
 
@@ -292,7 +296,9 @@
 (defun setup-dev/org-roam-refresh-agenda-list ()
   (interactive)
   (setq org-agenda-files (setup-dev/org-roam-list-notes-by-tag setup-dev-project-type))
-  (add-to-list 'org-agenda-files (file-truename "~/development/notebook/org-files/gmail-agenda.org")))
+  (if (file-directory-p "~/.org-jira")
+	  (mapc (lambda (x) (add-to-list 'org-agenda-files x))
+			(directory-files "~/.org-jira" t ".org"))))
 
 ;; Build the agenda list the first time for the session
 (setup-dev/org-roam-refresh-agenda-list)
@@ -566,7 +572,11 @@
 									 (org-block-begin-line (:height 0.7) org-block)))
 
   ;; Set a blank header line string to create blank space at the top
-  (setq header-line-format " "))
+  (setq header-line-format " ")
+  
+  ;; Center the presentation and wrap lines
+  (visual-fill-column-mode 1)
+  (visual-line-mode 1))
 
 (defun setup-dev/org-present-prepare-slide (buffer-name heading)
   ;; Show only top-level headlines
@@ -582,9 +592,16 @@
   ;; Reset font customizations
   (setq-local face-remapping-alist '((default variable-pitch default)))
 
-  (setq header-line-format nil))
+  (setq header-line-format nil)
+
+  ;; Stop centering the document
+  (visual-fill-column-mode 0)
+  (visual-line-mode 0))
 
 (use-package org-present)
+
+;; Turn on variable pitch fonts in Org Mode buffers
+(add-hook 'org-mode-hook 'variable-pitch-mode)
 
 ;; Register hooks
 (add-hook 'org-present-mode-hook 'setup-dev/org-present-start)
@@ -666,6 +683,7 @@
 
   (eshell-git-prompt-use-theme 'powerline))
 
+
 ;; dired
 ;; (use-package dired-single) not present in repositores anymore
 
@@ -728,6 +746,47 @@
 (add-hook 'sql-mode-hook
           (lambda ()
 			(ejc-sql-mode)))
+
+;; llama
+(use-package ellama
+  :init
+  ;; setup key bindings
+  (setopt ellama-keymap-prefix "C-c e")
+  ;; language you want ellama to translate to
+  (setopt ellama-language "English")
+  ;; could be llm-openai for example
+  (require 'llm-ollama)
+  (setopt ellama-provider
+	  (make-llm-ollama
+	   ;; this model should be pulled to use it
+	   ;; value should be the same as you print in terminal during pull
+	   :chat-model "llama3.1"
+	   :embedding-model "nomic-embed-text"
+	   :default-chat-non-standard-params '(("num_ctx" . 8192))))
+  ;; Predefined llm providers for interactive switching.
+  ;; You shouldn't add ollama providers here - it can be selected interactively
+  ;; without it. It is just example.
+  (setopt ellama-providers
+		    '(("zephyr" . (make-llm-ollama
+						   :chat-model "zephyr"
+						   :embedding-model "zephyr"))
+		      ("llama3.1" . (make-llm-ollama
+							 :chat-model "llama3.1"
+							 :embedding-model "llama3.1"))
+		      ("mixtral" . (make-llm-ollama
+							:chat-model "mixtral"
+							:embedding-model "mixtral"))))
+  ;; Naming new sessions with llm
+  (setopt ellama-naming-provider
+	  (make-llm-ollama
+	   :chat-model "llama3.1"
+	   :embedding-model "nomic-embed-text"
+	   :default-chat-non-standard-params '(("stop" . ("\n")))))
+  (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
+  ;; Translation llm provider
+  (setopt ellama-translation-provider (make-llm-ollama
+				       :chat-model "phi3:14b-medium-128k-instruct-q6_K"
+				       :embedding-model "nomic-embed-text")))
 
 ;; LSP
 (defun efs/lsp-mode-setup ()
