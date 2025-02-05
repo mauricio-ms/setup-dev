@@ -621,7 +621,7 @@
 
 (use-package term
   :config
-  (setq explicit-shell-file-name "zsh") ;; Change this to zsh, etc
+  (setq explicit-shell-file-name "bash") ;; Change this to zsh, etc
   ;;(setq explicit-zsh-args '())         ;; Use 'explicit-<shell>-args for shell-specific args
 
   ;; Match the default Bash shell prompt.  Update this if you have a custom prompt
@@ -667,7 +667,7 @@
   (eshell-git-prompt-use-theme 'powerline))
 
 ;; dired
-(use-package dired-single)
+;; (use-package dired-single) not present in repositores anymore
 
 (use-package dired
   :ensure nil
@@ -676,7 +676,8 @@
   :custom
   ((dired-listing-switches "-agho --group-directories-first")
    ;; For MacOS only, requires coreutils package installation
-   (insert-directory-program "gls" dired-use-ls-dired t))
+   ;; (insert-directory-program "gls" dired-use-ls-dired t)
+   )
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
     "h" 'dired-single-up-directory
@@ -788,6 +789,15 @@
 
 (use-package lsp-ivy
   :after lsp)
+
+;; Go Lang
+(use-package go-mode
+  :config
+  (general-define-key
+   :keymaps 'go-mode-map
+   "C-c d" #'godoc-at-point))
+(use-package go-eldoc) ;; install go-code (go install github.com/nsf/gocode@latest)
+(add-hook 'go-mode-hook 'go-eldoc-setup)
 
 ;; Java
 (use-package flycheck

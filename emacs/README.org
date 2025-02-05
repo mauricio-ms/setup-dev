@@ -27,9 +27,8 @@ display correctly:
 #+begin_src bash
 
   M-x all-the-icons-install-fonts
-  # If that doesn't work, try:
   M-x nerd-icons-install-fonts
-
+  
 #+end_src
 * Emacs Basics
 ** Key Bindings

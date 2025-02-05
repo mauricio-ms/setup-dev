@@ -1,3 +1,65 @@
+
+* Initial Setup
+
+** Restoring Backup
+
+Copy the desired folders, and then set the ownership for the machine user:
+
+#+begin_src shell
+  sudo cp -r /media/mauricio/san-disk/live/dotfiles ~/.
+  sudo chown -R mauricio: ~/dotfiles/
+  sudo cp -r /media/mauricio/san-disk/live/development ~/.
+  sudo chown -R mauricio: ~/development/
+  sudo cp -r /media/mauricio/san-disk/live/Documents/ ~/Documents/
+  sudo chown -R mauricio: ~/Documents/
+  sudo cp /media/mauricio/san-disk/live/.emacs-profile ~/.
+  sudo chown -R mauricio: ~/.emacs-profile
+  sudo cp /media/mauricio/san-disk/live/.emacs-profiles.el ~/.
+  sudo chown -R mauricio: ~/.emacs-profiles.el
+  sudo cp -R /media/mauricio/san-disk/live/.emacs.d ~/.emacs.d/
+  sudo chown -R mauricio: ~/.emacs.d/
+  sudo cp -r /media/mauricio/san-disk/live/scripts/ ~/.
+  sudo chown -R mauricio: ~/scripts
+#+end_src
+
+*If some directory already exists, a new folder will be created nested, so take care of that after the copy.*
+
+** Symbolic Links
+
+#+begin_src shell
+  ln -s ~/development/setup-dev/emacs/init.el ~/.config/.emacs-default/init.el
+#+end_src
+
+** Fonts 
+
+Download:
+Install JetBrainsMono
+iosevka-alie
+https://github.com/googlefonts/noto-emoji/raw/main/fonts/NotoColorEmoji.ttf
+
+Copy the fonts files to ~$HOME/.fonts~ (create the directory if it doesn't exists)
+
+** asdf
+
+#+begin_src shell
+  # Setup the plugins repository
+  asdf plugin list all
+  # Install plugins
+  asdf plugin add java
+  # Check java versions
+  asdf list all java
+  # Install java version
+  asdf install java openjdk-23
+  # Set the global version for java
+  asdf global java openjdk-23
+#+end_src
+
+
+
+** fd
+
+ln -s ~/development/setup-dev/xmonad.hs ~/.config/xmonad/xmonad.hs
+
 Create symbolic links to xmonad config
 ln -s ~/development/setup-dev/xmonad.hs ~/.config/xmonad/xmonad.hs
 ln -s ~/development/setup-dev/xmobarrc ~/.xmobarrc
@@ -16,21 +78,6 @@ Run nitrogen and configure the default directory to the wallpapers (like /usr/sh
 Run dmenu_run -b to install dmenu
 
 * Setup
-** asdf
-
-#+begin_src shell
-# Setup the plugins repository
-asdf plugin list all
-# Install plugins
-asdf plugin add java
-# Check java versions
-asdf list all java
-# Install java version
-asdf install java openjdk-20
-# Set the global version for java
-asdf global java openjdk-20
-#+end_src
-** fd
 
 It’s a great idea to install fd which is much faster than find.
 https://github.com/sharkdp/fd
@@ -52,14 +99,7 @@ gg: go to the top
 M-d: open menu
 M-number: switch to workspace numbex
 
-* Installing Fonts on Linux 
 
-Download the desired fonts
-Copy it to ~$HOME/.fonts~ (create the directory if it doesn't exists)
-
-Install JetBrainsMono
-iosevka-alie
-https://github.com/googlefonts/noto-emoji/raw/main/fonts/NotoColorEmoji.ttf
 
 * CURL
 
