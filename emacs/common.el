@@ -452,6 +452,13 @@
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch))
 
+(use-package verb)
+
+;; requires hurl installation
+;; (package-vc-install "https://github.com/JasZhe/hurl-mode")
+(use-package hurl-mode :mode "\\.hurl\\'")
+(add-to-list 'auto-mode-alist '("\\.hurl\\'" . hurl-mode))
+
 (defun setup-dev/org-mode-setup ()
   (org-indent-mode)
   (variable-pitch-mode 1)
@@ -536,7 +543,9 @@
        "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
   (define-key global-map (kbd "C-c j")
-    (lambda () (interactive) (org-capture nil "jj")))
+			  (lambda () (interactive) (org-capture nil "jj")))
+
+  (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
   
   (setup-dev/org-font-setup))
 
@@ -747,7 +756,7 @@
           (lambda ()
 			(ejc-sql-mode)))
 
-;; llama
+;; ellama
 (use-package ellama
   :init
   ;; setup key bindings
@@ -760,7 +769,7 @@
 	  (make-llm-ollama
 	   ;; this model should be pulled to use it
 	   ;; value should be the same as you print in terminal during pull
-	   :chat-model "llama3.1"
+	   :chat-model "llama3.2"
 	   :embedding-model "nomic-embed-text"
 	   :default-chat-non-standard-params '(("num_ctx" . 8192))))
   ;; Predefined llm providers for interactive switching.
@@ -770,16 +779,16 @@
 		    '(("zephyr" . (make-llm-ollama
 						   :chat-model "zephyr"
 						   :embedding-model "zephyr"))
-		      ("llama3.1" . (make-llm-ollama
-							 :chat-model "llama3.1"
-							 :embedding-model "llama3.1"))
+		      ("llama3.2" . (make-llm-ollama
+							 :chat-model "llama3.2"
+							 :embedding-model "llama3.2"))
 		      ("mixtral" . (make-llm-ollama
 							:chat-model "mixtral"
 							:embedding-model "mixtral"))))
   ;; Naming new sessions with llm
   (setopt ellama-naming-provider
 	  (make-llm-ollama
-	   :chat-model "llama3.1"
+	   :chat-model "llama3.2"
 	   :embedding-model "nomic-embed-text"
 	   :default-chat-non-standard-params '(("stop" . ("\n")))))
   (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
@@ -848,6 +857,15 @@
 
 (use-package lsp-ivy
   :after lsp)
+
+;; To fold/unfold nested sections
+(use-package yafolding)
+(defvar yafolding-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "<C-return>") #'yafolding-toggle-element)
+    map))
+(add-hook 'prog-mode-hook
+          (lambda () (yafolding-mode)))
 
 ;; Go Lang
 (use-package go-mode
