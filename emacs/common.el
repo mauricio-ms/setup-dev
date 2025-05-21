@@ -234,6 +234,7 @@
   :init
   (when (file-directory-p "~/development")
     (setq projectile-project-search-path '("~/development")))
+  (projectile-discover-projects-in-search-path)
   (setq projectile-switch-project-action #'projectile-commander))
 
 ;; TODO - Check why counsel-projectile-switch-project is not showing the actions
@@ -868,6 +869,18 @@
           (lambda () (yafolding-mode)))
 
 ;; Go Lang
+(require 'lsp-mode)
+(add-hook 'go-mode-hook #'lsp-deferred)
+
+;; Set up before-save hooks to format buffer and add/delete imports.
+;; Make sure you don't have other gofmt/goimports hooks enabled.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+;; https://github.com/dominikh/go-mode.el
+;; install godef (go install github.com/rogpeppe/godef@latest)
 (use-package go-mode
   :config
   (general-define-key
