@@ -70,17 +70,39 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("MELPA Stable" . "https://stable.melpa.org/packages/") t)
+;;(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+;;(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 
-(package-initialize)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
+
+;;(package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
+;;(package-install 'org)
 
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
 (require 'use-package)
-(setq use-package-always-ensure t)
+;;(setq use-package-always-ensure t)
 
 (require 'cl-lib)
 
@@ -473,8 +495,10 @@
 (use-package verb)
 
 ;; requires hurl installation
-;; (package-vc-install "https://github.com/JasZhe/hurl-mode")
-(use-package hurl-mode :mode "\\.hurl\\'")
+;;(unless (package-installed-p 'hurl-mode)
+;;  (package-vc-install "https://github.com/JasZhe/hurl-mode"))
+(use-package hurl-mode :mode "\\.hurl\\'"
+  :straight (:host github :repo "JasZhe/hurl-mode"))
 (add-to-list 'auto-mode-alist '("\\.hurl\\'" . hurl-mode))
 
 (defun setup-dev/org-mode-setup ()
@@ -482,7 +506,13 @@
   (variable-pitch-mode 1)
   (visual-line-mode 1))
 
+;;(use-package org-plus-contrib
+;;  :pin org)
+
 (use-package org
+  ;; :ensure org-plus-contrib
+  ;; :pin gnu
+  ;; :ensure t
   :hook (org-mode . setup-dev/org-mode-setup)
   :config
   (setq org-image-actual-width nil)
@@ -715,7 +745,7 @@
 ;; (use-package dired-single) not present in repositores anymore
 
 (use-package dired
-  :ensure nil
+  :straight nil
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
   :custom
@@ -958,7 +988,7 @@
   (define-key dap-mode-map (kbd "<f9>") #'dap-continue))
 
 (use-package dap-java
-  :ensure nil
+  :straight nil
   :after (lsp-java)
   :config
   (general-define-key
