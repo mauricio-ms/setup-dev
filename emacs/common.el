@@ -70,8 +70,6 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("MELPA Stable" . "https://stable.melpa.org/packages/") t)
-;;(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
-;;(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -92,17 +90,14 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
-;;(package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
-;;(package-install 'org)
 
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
 (require 'use-package)
-;;(setq use-package-always-ensure t)
 
 (require 'cl-lib)
 
@@ -494,9 +489,6 @@
 
 (use-package verb)
 
-;; requires hurl installation
-;;(unless (package-installed-p 'hurl-mode)
-;;  (package-vc-install "https://github.com/JasZhe/hurl-mode"))
 (use-package hurl-mode :mode "\\.hurl\\'"
   :straight (:host github :repo "JasZhe/hurl-mode"))
 (add-to-list 'auto-mode-alist '("\\.hurl\\'" . hurl-mode))
@@ -506,13 +498,8 @@
   (variable-pitch-mode 1)
   (visual-line-mode 1))
 
-;;(use-package org-plus-contrib
-;;  :pin org)
 
 (use-package org
-  ;; :ensure org-plus-contrib
-  ;; :pin gnu
-  ;; :ensure t
   :hook (org-mode . setup-dev/org-mode-setup)
   :config
   (setq org-image-actual-width nil)
