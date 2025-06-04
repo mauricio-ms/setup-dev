@@ -311,6 +311,13 @@
 	  (mapc (lambda (x) (add-to-list 'org-agenda-files x))
 			(directory-files "~/.org-jira" t ".org"))))
 
+(defun setup-dev/org-refresh-agenda ()
+  "Refresh org-agenda buffers."
+  (when (bound-and-true-p org-agenda-buffer-name)
+    (org-agenda-maybe-redo)))
+
+(add-hook 'org-after-todo-state-change-hook #'setup-dev/org-refresh-agenda)
+
 ;; Build the agenda list the first time for the session
 (setup-dev/org-roam-refresh-agenda-list)
 
