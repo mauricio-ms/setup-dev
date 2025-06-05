@@ -139,6 +139,14 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
+;; Allows to switch between buffers easily
+(use-package ace-window
+  :ensure t
+  :bind ("M-o" . ace-window))
+
+;; Allows to undo and redo window configurations with C-c left and C-c right, respectively
+(winner-mode 1)
+
 (use-package which-key
   :diminish which-key-mode
   :config
@@ -194,6 +202,10 @@
 
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
+
+;; To avoid conflicts with lsp-mode go to definition feature
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "M-.") nil))
 
 (use-package evil-collection
   :after evil
