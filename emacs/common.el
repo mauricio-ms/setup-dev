@@ -71,7 +71,25 @@
 (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("MELPA Stable" . "https://stable.melpa.org/packages/") t)
 
-(package-initialize)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
+
 (unless package-archive-contents
   (package-refresh-contents))
 
@@ -80,7 +98,6 @@
   (package-install 'use-package))
 
 (require 'use-package)
-(setq use-package-always-ensure t)
 
 (require 'cl-lib)
 
@@ -108,24 +125,6 @@
 (use-package vlf)
 (require 'vlf-setup)
 
-(use-package ivy
-  :diminish
-  :bind (("C-s" . swiper)
-         :map ivy-minibuffer-map
-         ("TAB" . ivy-alt-done)   
-         ("C-l" . ivy-alt-done)
-         ("C-j" . ivy-next-line)
-         ("C-k" . ivy-previous-line)
-         :map ivy-switch-buffer-map
-         ("C-k" . ivy-previous-line)
-         ("C-l" . ivy-done)
-         ("C-d" . ivy-switch-buffer-kill)
-         :map ivy-reverse-i-search-map
-         ("C-k" . ivy-previous-line)
-         ("C-d" . ivy-reverse-i-search-kill))
-  :config
-  (ivy-mode 1))
-
 (use-package all-the-icons)
 
 (use-package doom-modeline
@@ -152,17 +151,6 @@
   :config
   (setq which-key-idle-delay 0.3)
   (which-key-mode))
-
-(use-package ivy-rich
-  :config
-  (ivy-rich-mode 1))
-
-(use-package counsel
-  :bind (("M-x" . counsel-M-x)
-	 ("C-x b" . counsel-ibuffer)
-	 ("C-x C-f" . counsel-find-file)
-	 :map minibuffer-local-map
-	 ("C-r" . 'counsel-minibuffer-history)))
 
 (use-package helpful
   :custom
@@ -249,18 +237,57 @@
   (projectile-discover-projects-in-search-path)
   (setq projectile-switch-project-action #'projectile-commander))
 
-;; TODO - Check why counsel-projectile-switch-project is not showing the actions
 (use-package counsel-projectile
-  :config (counsel-projectile-mode))
-
-(use-package treemacs-projectile
-  :after (treemacs projectile))
+  :after projectile
+  :config
+  (counsel-projectile-mode 1)
+  (setq counsel-projectile-action
+		'(1
+		  ("o" counsel-projectile-action "current window")
+		  ("j" counsel-projectile-action-other-window "other window")
+		  ("k" counsel-projectile-action-kill-delete "kill buffer / delete-file")
+		  ("x" counsel-projectile-action-file-extern "open file externally")
+		  ("r" counsel-projectile-action-file-root "open file as root")
+		  ("m" counsel-projectile-action-find-file-manually "find file manually")
+		  ("p" counsel-projectile-action-switch-project "switch project")
+		  ("v" (lambda(_) (counsel-projectile-switch-project-action-vc (projectile-project-root))) "magit"))))
 
 (use-package magit
+  :commands (magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
-(use-package forge) ;; TODO The GitHub authentication needs to be configure, check at magit documentation page
+(use-package ivy
+  :diminish
+  :bind (("C-s" . swiper)
+         :map ivy-minibuffer-map
+         ("TAB" . ivy-alt-done)   
+         ("C-l" . ivy-alt-done)
+         ("C-j" . ivy-next-line)
+         ("C-k" . ivy-previous-line)
+         :map ivy-switch-buffer-map
+         ("C-k" . ivy-previous-line)
+         ("C-l" . ivy-done)
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-k" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (ivy-mode 1))
+
+(use-package counsel
+  :bind (("M-x" . counsel-M-x)
+		 ("C-x b" . counsel-ibuffer)
+		 ("C-x C-f" . counsel-find-file)
+		 :map minibuffer-local-map
+		 ("C-r" . 'counsel-minibuffer-history)))
+
+(use-package ivy-rich
+  :config
+  (ivy-rich-mode 1))
+
+(use-package treemacs-projectile
+  :after (treemacs projectile))
 
 ;; org roam
 (use-package org-roam
@@ -312,6 +339,13 @@
   (if (file-directory-p "~/.org-jira")
 	  (mapc (lambda (x) (add-to-list 'org-agenda-files x))
 			(directory-files "~/.org-jira" t ".org"))))
+
+(defun setup-dev/org-refresh-agenda ()
+  "Refresh org-agenda buffers."
+  (when (bound-and-true-p org-agenda-buffer-name)
+    (org-agenda-maybe-redo)))
+
+(add-hook 'org-after-todo-state-change-hook #'setup-dev/org-refresh-agenda)
 
 ;; Build the agenda list the first time for the session
 (setup-dev/org-roam-refresh-agenda-list)
@@ -467,15 +501,15 @@
 
 (use-package verb)
 
-;; requires hurl installation
-;; (package-vc-install "https://github.com/JasZhe/hurl-mode")
-(use-package hurl-mode :mode "\\.hurl\\'")
+(use-package hurl-mode :mode "\\.hurl\\'"
+  :straight (:host github :repo "JasZhe/hurl-mode"))
 (add-to-list 'auto-mode-alist '("\\.hurl\\'" . hurl-mode))
 
 (defun setup-dev/org-mode-setup ()
   (org-indent-mode)
   (variable-pitch-mode 1)
   (visual-line-mode 1))
+
 
 (use-package org
   :hook (org-mode . setup-dev/org-mode-setup)
@@ -710,7 +744,7 @@
 ;; (use-package dired-single) not present in repositores anymore
 
 (use-package dired
-  :ensure nil
+  :straight nil
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
   :custom
@@ -953,7 +987,7 @@
   (define-key dap-mode-map (kbd "<f9>") #'dap-continue))
 
 (use-package dap-java
-  :ensure nil
+  :straight nil
   :after (lsp-java)
   :config
   (general-define-key
