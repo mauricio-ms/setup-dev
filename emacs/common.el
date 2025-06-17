@@ -333,9 +333,21 @@
            (setup-dev/org-roam-filter-by-tag tag-name)
            (org-roam-node-list))))
 
+(defun setup-dev/projectile-org-files ()
+  "Return the list of org files from all known projectile projects."
+  (let ((projectile-files (projectile-relevant-known-projects))
+        (org-files '()))
+    (dolist (project projectile-files)
+      (let ((org-file (expand-file-name "notes.org" project)))
+        (when (file-exists-p org-file)
+          (push org-file org-files))))
+    org-files))
+
 (defun setup-dev/org-roam-refresh-agenda-list ()
   (interactive)
-  (setq org-agenda-files (setup-dev/org-roam-list-notes-by-tag setup-dev-project-type))
+  (setq org-agenda-files (append
+						  (setup-dev/projectile-org-files)
+						  (setup-dev/org-roam-list-notes-by-tag setup-dev-project-type)))
   (if (file-directory-p "~/.org-jira")
 	  (mapc (lambda (x) (add-to-list 'org-agenda-files x))
 			(directory-files "~/.org-jira" t ".org"))))
