@@ -255,7 +255,9 @@
 (use-package magit
   :commands (magit-status magit-get-current-branch)
   :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  ;; to wrap lines in diff views
+  (add-hook 'magit-diff-mode-hook #'visual-line-mode))
 
 (use-package ivy
   :diminish
@@ -513,15 +515,23 @@
 
 (use-package verb)
 
+;; HTTP Client
 (use-package hurl-mode :mode "\\.hurl\\'"
   :straight (:host github :repo "JasZhe/hurl-mode"))
 (add-to-list 'auto-mode-alist '("\\.hurl\\'" . hurl-mode))
+
+;; To fold/unfold nested sections
+(use-package yafolding
+  :after hurl-mode
+  :config
+  (setq yafolding-ellipsis-content " ▾")
+  (add-hook 'prog-mode-hook 'yafolding-mode)
+  (add-hook 'hurl-response-mode-hook 'yafolding-mode))
 
 (defun setup-dev/org-mode-setup ()
   (org-indent-mode)
   (variable-pitch-mode 1)
   (visual-line-mode 1))
-
 
 (use-package org
   :hook (org-mode . setup-dev/org-mode-setup)
@@ -916,15 +926,6 @@
 
 (use-package lsp-ivy
   :after lsp)
-
-;; To fold/unfold nested sections
-(use-package yafolding)
-(defvar yafolding-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "<C-return>") #'yafolding-toggle-element)
-    map))
-(add-hook 'prog-mode-hook
-          (lambda () (yafolding-mode)))
 
 ;; Go Lang
 (require 'lsp-mode)
